@@ -130,7 +130,7 @@ paths:
       - url: https://api.condortechnoloties.com
       security:
       - candor-api:
-        - full:candor
+        - candorApi/full:candor
       requestBody:
         required: true
         description: Candor Results request
@@ -359,3 +359,13 @@ components:
             type: DUXML
           - data: SGVsbG8gV29ybGQ=
             type: CREDIT
+
+  securitySchemes:
+    candor-api:
+      type: oauth2
+      description: 'DRAFT: Once deployed auth should work'
+      flows:
+        clientCredentials:
+          tokenUrl: https://candor-api-dev.auth.us-east-2.amazoncognito.com
+          scopes:
+            candorApi/candorApi/full:candor: Write access to LOS data

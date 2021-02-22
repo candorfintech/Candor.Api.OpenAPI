@@ -2,7 +2,6 @@ openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
   version: 0.2.0
-  description: Api 
 externalDocs:
   description: OpenAPI SwaggerUI
   url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=ICR
@@ -19,7 +18,7 @@ paths:
       operationId: IcrSubscribe
       security:
       - candor-api:
-        - write:icr
+        - candorApi/write:icr
       requestBody:
         required: true
         content:
@@ -76,7 +75,7 @@ paths:
       description: Used by the ICR to upload result files associated with loan `{id}`. The request will contain some info about the files to be uploaded such as filename. The results will then contain an upload Url (optionally with mandatory headers) that'll be used to upload the file with a PUT request.
       security:
       - candor-api:
-        - write:icr
+        - candorApi/write:icr
       requestBody:
         required: true
         description: A collection of output files that needs to be uploaded to Candor.
@@ -114,7 +113,7 @@ paths:
       description: Used by the ICR to report files processed and their status. This should be the same location as the `callback` property in the FilesAvailable callback event.
       security:
       - candor-api:
-        - write:icr
+        - candorApi/write:icr
       requestBody:
         required: true
         content:
@@ -131,6 +130,31 @@ paths:
           description: Unexpected Request Body.
         404:
           description: Either an input or output file was not found.
+
+  /loan/{id}/file/{fileId}:
+    parameters:
+      - name: id
+        $ref: 'schemas.yaml#/components/parameters/LoanId'
+      - name: fileId
+        description: The file unique file Id
+        required: true
+        in: path
+        example: 371d3620-1c98-4466-9f95-290b7748594d
+        schema:
+          type: string
+    get:
+      tags:
+      - ICR
+      security:
+      - candor-api:
+        - candorApi/read:icr
+      responses:
+        302:
+          description: Redirect to authorized download Url.
+        403:
+          description: Unauthorized
+        404:
+          description: Not Found
 
 
 components:

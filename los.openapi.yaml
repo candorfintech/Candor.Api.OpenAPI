@@ -26,7 +26,7 @@ paths:
         request.
       security:
       - candor-api:
-        - write:los
+        - candorApi/write:los
       requestBody:
         required: true
         description: A collection of files that needs to be uploaded to Candor.
@@ -63,7 +63,7 @@ paths:
       summary: Process loan with optional files
       security:
       - candor-api:
-        - write:los
+        - candorApi/write:los
       requestBody:
         required: true
         description: Process Loan request
