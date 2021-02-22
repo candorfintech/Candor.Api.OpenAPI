@@ -1,0 +1,235 @@
+openapi: 3.0.2
+info:
+  title: Common definitions for Candor Api
+  version: 0.2.0
+paths:
+  /:
+    description: See a definition specific specification
+components:
+  parameters:
+    LoanId:
+      name: id
+      description: The unique identifier for this loan application.
+      in: path
+      required: true
+      example: c8e27489-0381-438f-8148-4b7a2379a64c
+      schema:
+        $ref: 'schemas.yaml#/components/schemas/LoanId'
+
+  schemas:
+    LoanId:
+      type: string
+      title: LoanId
+      description: The unique identifier for this loan application.
+      minLength: 1
+
+    Context:
+      type: string
+      title: Context
+      description: A value used by the caller to track the state around this request. If one is supplied, it must be returned as specified.
+
+    LoanDataType:
+      type: string
+      title: Loan Data Type
+      description: |
+        The various loan data types that can be associated with the loan.
+        - FMN32: FannieMae v3.2
+        - DUXML
+        - LPAXML
+        - CREDIT
+        - FLOODCERT
+        - TWNXML
+        - FINICITY
+        - FRMFREE
+      # TODO: get descriptions for each type, and validate we have them all
+      enum:
+      - FMN32
+      - DUXML
+      - LPAXML
+      - CREDIT
+      - FLOODCERT
+      - TWNXML
+      - FINICITY
+      - FRMFREE
+
+    UploadFileRequest:
+      type: object
+      title: Upload File Request
+      required:
+      - files
+      properties:
+        files:
+          type: array
+          description: A collection of files requesting to be uploaded.
+          items:
+            type: object
+            description: Metadata about the file requesting to be uploaded.
+              Either the `id`, `filename`, or both must be provided.
+            minItems: 1
+            properties:
+              id:
+                type: string
+                description: A unique identifier for this file in the context of this loan. If one is not supplied, one will be created by the Candor Api.
+              filename:
+                type: string
+                description: 'The filename, e.g., HelloWorld.pdf'
+
+    UploadFileResponse:
+      type: object
+      title: Upload File Response
+      required:
+      - id
+      - files
+      properties:
+        id:
+          $ref: '#/components/schemas/LoanId'
+        files:
+          type: array
+          description: A collection of successful or failed file upload requests.
+          items:
+            type: object
+            description: Results of a file upload request. It'll either contain the `upload` location, or an `error`.
+            required:
+            - id
+            properties:
+              id:
+                type: string
+                description: The original `id` supplied in the request if present, or a unique identifier created for this file by the Candor Api.
+              error:
+                type: string
+                description: If an error occurred while trying to complete the upload request for this file, this will contain the error message.
+              upload:
+                type: object
+                required:
+                - url
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    description: If this file request is valid, this will contain the Url where the file can be uploaded using the `PUT` verb. NOTE, there is an expiration time to this upload url. So it is best to make this request right when you are ready to upload the file.
+                  headers:
+                    type: object
+                    description: Required custom headers that need to be used during the upload PUT request.
+                    additionalProperties:
+                      type: string
+
+    ProcessLoanBase:
+      type: object
+      required:
+      - id
+      - loanData
+      properties:
+        id:
+          $ref: '#/components/schemas/LoanId'
+        responseType:
+          type: string
+          description: "`asynchronous` will return  202 response while
+            `synchronous` will return a 200 response. `asynchronous` is the
+            default if not supplied. Files will always be processed asynchronously."
+          enum:
+          - asynchronous
+          - synchronous
+        context:
+          $ref: '#/components/schemas/Context'
+        emails:
+          type: array
+          title: Emails
+          description: A list of emails to send a notification to after any asynchronous call is finished.
+          # TODO: verify emails don't get sent for Synchronous calls.
+          items:
+            type: object
+            required:
+            - email
+            - type
+            properties:
+              email:
+                type: string
+              type:
+                type: string
+                enum:
+                - Processor
+                - Underwriter
+                - LoanOfficer
+        investor:
+          type: object
+          properties:
+            name:
+              type: string
+            productName:
+              type: string
+        gse:
+          type: string
+          default: FannieMae
+          enum:
+          - FannieMae
+          - FreddieMac
+
+    CandorResult:
+      type: object
+      title: Candor Result
+      properties:
+        id:
+          $ref: '#/components/schemas/LoanId'
+        runId:
+          type: integer
+          description: The number of times findings have been processed on this loan file
+        timestamp:
+          type: string
+          format: date-time
+          description: An ISO-8601 formatted date/time of when this was result was generated
+        context:
+          $ref: '#/components/schemas/Context'
+        ezToClose:
+          type: string
+        insuranceCovered:
+          type: string
+        underwritingStatus:
+          type: string
+        occupancy:
+          type: string
+        identity:
+          type: string
+        valuation:
+          type: string
+        liabilities:
+          type: string
+        assets:
+          type: string
+        income:
+          type: string
+        conditions:
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+              status:
+                type: integer
+                # todo: get possible values
+                enum:
+                  - 0
+              name:
+                type: string
+                description: Condition Name
+              description:
+                type: string
+                description: Extended descriptive text for this condition
+              priorTo:
+                type: string
+              owner:
+                type: string
+              category:
+                type: string
+        results:
+          type: array
+          items:
+            properties:
+              name:
+                type: string
+                description: The name of the result document.
+              section:
+                type: string
+                description: A section/folder container for this document.
+              base64:
+                type: string
+                description: The result document binary Base64 encoded.

@@ -1,0 +1,358 @@
+openapi: 3.0.3
+info:
+  title: Candor Api Decisions Communication
+  version: 0.2.0
+  description: Api calls that Candor Api Middleware will use
+tags:
+- name: Decisions
+- name: Candor Api
+paths:
+  /process-loan-data:
+    post:
+      tags:
+      - Decisions
+      summary: Process Loan Data
+      description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `asynchronous`).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessLoan'
+            examples:
+              ProcessLoanReqSync:
+                $ref: '#/components/examples/ProcessLoanReqSync'
+              ProcessLoanReqAsync:
+                $ref: '#/components/examples/ProcessLoanReqAsync'
+      responses:
+        '200':
+          description: Successful synchronous response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandorResultSync'
+              example:
+                id: c8e27489-0381-438f-8148-4b7a2379a64c
+                candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
+                runId: 1
+                timestamp: '0001-01-01T00:00:00Z'
+                context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+                customerId: CustomerName-Production
+                ezToClose: '75'
+                insuranceCovered: Pending
+                underwritingStatus: Conditional Approval
+                occupancy: Valid
+                identity: Valid
+                valuation: Pending
+                liabilities: Pending
+                assets: Pending
+                income: Pending
+                conditions:
+                - id: 151ce1d9-90e2-4e32-9337-8de6d8124e50
+                  status: 0
+                  name: Condition Name
+                  description: Extended descriptive text for this condition
+                  priorTo: PTD
+                  owner: Lender
+                  category: Credit
+                results:
+                - name: Findings.pdf
+                  section: Candor - Findings Page
+                  base64: SGVsbG8gV29ybGQ=
+        '202':
+          description: Successful asynchronous response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandorResultAsync'
+              example:
+                candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
+        default:
+          description: Unexpected Error
+
+  /process-loan-files:
+    post:
+      tags:
+      - Decisions
+      summary: Process Loan Files
+      description: 'This will always be an asynchronous call and will always occur after a call to "Process Loan Data" has already occurred.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessFiles'
+            example:
+              id: c8e27489-0381-438f-8148-4b7a2379a64c
+              context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+              candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
+              sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+              inputFiles:
+              - bucket: loan-files
+                path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/371d3620-1c98-4466-9f95-290b7748594d
+                status:
+                  code: 200
+                  message: Successfully ICR'd
+              - bucket: loan-files
+                path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/9982324b-577e-4061-94f1-c506182cbe82
+                status:
+                  code: 300
+                  message: Duplicate request
+              - bucket: loan-files
+                path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
+                status:
+                  code: 400
+                  message: Error Type - Corrupted Document
+              outputFiles:
+                - bucket: loan-files
+                  path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/d42e2100-103a-414a-8de7-3d5935716bcd
+                - bucket: loan-files
+                  path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/53965b26-07eb-4498-a1c5-754e00569c83
+                - bucket: loan-files
+                  path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/8770662d-8d25-413a-88c2-d232fea48bfc
+      responses:
+        '202':
+          description: Accepted
+        default:
+          description: Unexpected Error
+
+  /loan/{id}/results:
+    parameters:
+    - name: id
+      $ref: 'schemas.yaml#/components/parameters/LoanId'
+    post:
+      tags:
+      - Candor Api
+      operationId: CandorResults
+      summary: Report results back to Candor Api to then notify the LOS
+      servers:
+      - url: https://api.condortechnoloties.com
+      security:
+      - candor-api:
+        - full:candor
+      requestBody:
+        required: true
+        description: Candor Results request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandorResultCallback'
+      responses:
+        '200':
+          description: Ok
+
+components:
+  schemas:
+    CandorId:
+      type: string
+      description: The Decisions unique identifier for this loan application.
+    CustomerId:
+      type: string
+      description: "Candor's internal Id for this customer"
+    SessionId:
+      type: string
+      description: "Decisions' internal Auth Id for this customer"
+    CandorFile:
+      type: object
+      properties:
+        bucket:
+          type: string
+          description: The S3 bucket
+        path:
+          type: string
+          description: The S3 object key (path)
+
+    ProcessLoan:
+      type: object
+      allOf:
+        - $ref: 'schemas.yaml#/components/schemas/ProcessLoanBase'
+      required:
+      - customerId
+      - sessionId
+      properties:
+        customerId:
+          $ref: '#/components/schemas/CustomerId'
+        sessionId:
+          $ref:  "#/components/schemas/SessionId"
+        loanData:
+          type: array
+          description: The various loan data associated with the loan. There must exist at least the FMN32 loan application data.
+          minItems: 1
+          items:
+            type: object
+            properties:
+              data:
+                type: string
+                description: The content in base64 format
+              type:
+                $ref: 'schemas.yaml#/components/schemas/LoanDataType'
+                # include `FRAUD` when the LOS can send fraudReport info
+
+    ProcessFiles:
+      type: object
+      required:
+      - id
+      - context
+      - candorId
+      - sessionId
+      - inputFiles
+      - outputFiles
+      properties:
+        id:
+          $ref: 'schemas.yaml#/components/schemas/LoanId'
+        context:
+          $ref: 'schemas.yaml#/components/schemas/Context'
+        candorId:
+          $ref:  "#/components/schemas/CandorId"
+        sessionId:
+          $ref:  "#/components/schemas/SessionId"
+        inputFiles:
+          type: array
+          description: A list of LOS input files and its processed status
+          minItems: 1
+          items:
+            title: Input File
+            allOf:
+              - $ref: '#/components/schemas/CandorFile'
+            required:
+            - bucket
+            - path
+            - status
+            properties:
+              # TODO: Get all the possible statuses from Decisions
+              status:
+                type: object
+                description: |
+                  The processed status for this LOS input file.
+
+                  - 200: Success
+                  - 300: Duplicate
+                  - 400: Corrupted
+                  - 500: Document Untrusted
+                required:
+                - code
+                - message
+                properties:
+                  code:
+                    type: integer
+                    enum:
+                      - 200
+                      - 300
+                      - 400
+                      - 500
+                  message:
+                    type: string
+                    description: Descriptive text of the status
+        outputFiles:
+          type: array
+          description: A list of ICR output files
+          minItems: 1
+          items:
+            title: Output File
+            allOf:
+              - $ref: '#/components/schemas/CandorFile'
+            required:
+            - bucket
+            - path
+
+    CandorResultSync:
+      type: object
+      title: Synchronous Candor Result
+      allOf:
+        - $ref: 'schemas.yaml#/components/schemas/CandorResult'
+      properties:
+        candorId:
+          $ref: '#/components/schemas/CandorId'
+        customerId:
+          $ref:  "#/components/schemas/CustomerId"
+
+    CandorResultAsync:
+      type: object
+      title: Asynchronous Candor Result
+      properties:
+        candorId:
+          $ref: '#/components/schemas/CandorId'
+
+    CandorResultCallback:
+      type: object
+      title: Candor Result
+      allOf:
+        - $ref: 'schemas.yaml#/components/schemas/CandorResult'
+      properties:
+        inputFile:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              status:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+        outputFiles:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              status:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+
+  examples:
+    ProcessLoanReqSync:
+      summary: Synchronous Process Loan Request
+      value:
+        id: c8e27489-0381-438f-8148-4b7a2379a64c
+        customerId: CustomerName-Production
+        sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        responseType: synchronous
+        context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        emails:
+          - email: processor@domain.com
+            type: Processor
+          - email: underwriter@domain.com
+            type: Underwriter
+        investor:
+          name: Wells Fargo
+          productName: 30 Year Fixed Mortgage
+        gse: FannieMae
+        loanData:
+          - data: SGVsbG8gV29ybGQ=
+            type: FMN32
+          - data: SGVsbG8gV29ybGQ=
+            type: DUXML
+          - data: SGVsbG8gV29ybGQ=
+            type: CREDIT
+
+    ProcessLoanReqAsync:
+      summary: Asynchronous Process Loan Request
+      value:
+        id: c8e27489-0381-438f-8148-4b7a2379a64c
+        customerId: CustomerName-Production
+        sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        responseType: asynchronous
+        context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        emails:
+          - email: processor@domain.com
+            type: Processor
+          - email: underwriter@domain.com
+            type: Underwriter
+        investor:
+          name: Wells Fargo
+          productName: 30 Year Fixed Mortgage
+        gse: FannieMae
+        loanData:
+          - data: SGVsbG8gV29ybGQ=
+            type: FMN32
+          - data: SGVsbG8gV29ybGQ=
+            type: DUXML
+          - data: SGVsbG8gV29ybGQ=
+            type: CREDIT
