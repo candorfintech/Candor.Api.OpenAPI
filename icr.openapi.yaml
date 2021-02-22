@@ -2,11 +2,13 @@ openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
   version: 0.2.0
+  description: Api 
 externalDocs:
   description: OpenAPI SwaggerUI
-  url: https://candorfintech.github.io/Candor.Api?urls.primaryName=ICR
+  url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=ICR
 tags:
 - name: ICR
+
 paths:
   /icr/subscribe:
     post:

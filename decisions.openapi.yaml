@@ -2,10 +2,13 @@ openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
   version: 0.2.0
-  description: Api calls that Candor Api Middleware will use
+externalDocs:
+  description: OpenAPI SwaggerUI
+  url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Decisions
 tags:
 - name: Decisions
 - name: Candor Api
+
 paths:
   /process-loan-data:
     post:

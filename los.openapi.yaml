@@ -4,7 +4,7 @@ info:
   version: 0.2.0
 externalDocs:
   description: OpenAPI SwaggerUI
-  url: https://candorfintech.github.io/Candor.Api?urls.primaryName=Candor%20Api
+  url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=LOS
 tags:
 - name: LOS
   description: LOS communication
