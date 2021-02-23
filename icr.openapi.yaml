@@ -57,11 +57,36 @@ paths:
                   description: Any non-success response code will be logged.
       responses:
         '201':
-          description: Webhook Set
+          description: Callback set
         '400':
           description: Error in Request Body
         default:
           description: Unexpected Error
+
+  /loan/{id}/file/{fileId}:
+    parameters:
+      - name: id
+        $ref: 'schemas.yaml#/components/parameters/LoanId'
+      - name: fileId
+        description: The unique identifier for this file.
+        required: true
+        in: path
+        example: 371d3620-1c98-4466-9f95-290b7748594d
+        schema:
+          type: string
+    get:
+      tags:
+      - ICR
+      security:
+      - candor-api:
+        - candorApi/read:icr
+      responses:
+        302:
+          description: Redirect to authorized download Url.
+        403:
+          description: Unauthorized
+        404:
+          description: Not Found
 
   /icr/{id}/file:
     parameters:
@@ -130,31 +155,6 @@ paths:
           description: Unexpected Request Body.
         404:
           description: Either an input or output file was not found.
-
-  /loan/{id}/file/{fileId}:
-    parameters:
-      - name: id
-        $ref: 'schemas.yaml#/components/parameters/LoanId'
-      - name: fileId
-        description: The file unique file Id
-        required: true
-        in: path
-        example: 371d3620-1c98-4466-9f95-290b7748594d
-        schema:
-          type: string
-    get:
-      tags:
-      - ICR
-      security:
-      - candor-api:
-        - candorApi/read:icr
-      responses:
-        302:
-          description: Redirect to authorized download Url.
-        403:
-          description: Unauthorized
-        404:
-          description: Not Found
 
 
 components:
@@ -346,10 +346,10 @@ components:
   securitySchemes:
     candor-api:
       type: oauth2
-      description: 'DRAFT: Once deployed auth should work'
+      description: This will not work in SwaggerUI until CORS is enabled on Cognito
       flows:
         clientCredentials:
-          tokenUrl: https://candor-api-dev.auth.us-east-2.amazoncognito.com
+          tokenUrl: https://candor-api-dev.auth.us-east-2.amazoncognito.com/oauth2/token
           scopes:
             candorApi/read:icr: Write access to ICR data
             candorApi/write:icr: Write access to ICR data

@@ -363,9 +363,9 @@ components:
   securitySchemes:
     candor-api:
       type: oauth2
-      description: 'DRAFT: Once deployed auth should work'
+      description: This will not work in SwaggerUI until CORS is enabled on Cognito
       flows:
         clientCredentials:
-          tokenUrl: https://candor-api-dev.auth.us-east-2.amazoncognito.com
+          tokenUrl: https://candor-api-dev.auth.us-east-2.amazoncognito.com/oauth2/token
           scopes:
             candorApi/candorApi/full:candor: Write access to LOS data

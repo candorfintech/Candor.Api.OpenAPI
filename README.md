@@ -7,7 +7,12 @@ This repository hosts the OpenAPI specifications and Swagger UI for the Candor A
   npx lite-server
   ```
 - [dotnet-serve](https://github.com/natemcmaster/dotnet-serve)
-    ```sh
-    dotnet tool install --global dotnet-serve
-    dotnet serve
-    ```
+  ```sh
+  dotnet tool install --global dotnet-serve
+  dotnet serve
+  ```
+
+## Changelog
+
+v0.2.0
+- initial publish
