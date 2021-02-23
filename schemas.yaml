@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.2.0
+  version: 0.3.0
 paths:
   /:
     description: See a definition specific specification

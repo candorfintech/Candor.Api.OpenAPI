@@ -14,5 +14,5 @@ This repository hosts the OpenAPI specifications and Swagger UI for the Candor A
 
 ## Changelog
 
-v0.2.0
+v0.3.0
 - initial publish
