@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.3.0
+  version: 0.4.0
 paths:
   /:
     description: See a definition specific specification
@@ -33,15 +33,14 @@ components:
       title: Loan Data Type
       description: |
         The various loan data types that can be associated with the loan.
-        - FMN32: FannieMae v3.2
-        - DUXML
-        - LPAXML
-        - CREDIT
-        - FLOODCERT
-        - TWNXML
-        - FINICITY
-        - FRMFREE
-      # TODO: get descriptions for each type, and validate we have them all
+        - FMN32: Fannie Mae v3.2
+        - DUXML: Fannie Mae Desktop Underwriter
+        - LPAXML: Loan Product Advisor
+        - CREDIT: Credit Provider's Xml (Core Logic)
+        - FLOODCERT: Flood Certification (Core Logic)
+        - TWNXML: Work Number
+        - FINICITY: Verification of assets vendor
+        - FRMFREE: Asset Validation
       enum:
       - FMN32
       - DUXML
@@ -51,6 +50,13 @@ components:
       - TWNXML
       - FINICITY
       - FRMFREE
+
+    StatusType:
+      type: string
+      enum:
+      - Pending
+      - Valid
+      - Invalid
 
     UploadFileRequest:
       type: object
@@ -69,10 +75,23 @@ components:
             properties:
               id:
                 type: string
-                description: A unique identifier for this file in the context of this loan. If one is not supplied, one will be created by the Candor Api.
+                description: |
+                  A unique identifier for this file in the context of this loan. If one is not supplied, one will be created by the Candor Api. It is recommended to stick with the following characters:
+
+                  - `0`-`9`
+                  - `a`-`z`
+                  - `A`-`Z`
+                  - Exclamation point: `!`
+                  - Hyphen: `-`
+                  - Underscore: `_`
+                  - Period: `.`
+                  - Asterisk: `*`
+                  - Single quote: `'`
+                  - Open parentheses: `(`
+                  - Close parentheses: `)`
               filename:
                 type: string
-                description: 'The filename, e.g., HelloWorld.pdf'
+                description: The filename, e.g., "April Bank Statement.pdf"
 
     UploadFileResponse:
       type: object
@@ -115,27 +134,26 @@ components:
 
     ProcessLoanBase:
       type: object
-      required:
-      - id
-      - loanData
       properties:
-        id:
-          $ref: '#/components/schemas/LoanId'
         responseType:
           type: string
-          description: "`asynchronous` will return  202 response while
-            `synchronous` will return a 200 response. `asynchronous` is the
-            default if not supplied. Files will always be processed asynchronously."
+          description: |
+            This drives the response type back to the LOS when `filesToProcess` are present. And if no `filesToProcess` are present a Candor Result will be returned in the response.
+
+            - `Asynchronous`: A `202` response will be returned and the body will **not** contain a Candor Result.
+            - `Synchronous`: A `200` response will be returned with a Candor Result in the body.
+
+            The system default is `Asynchronous` which can be overridden as a Customer setting, and then additionally overridden here per request.
+          default: Asynchronous
           enum:
-          - asynchronous
-          - synchronous
+          - Asynchronous
+          - Synchronous
         context:
           $ref: '#/components/schemas/Context'
         emails:
           type: array
           title: Emails
-          description: A list of emails to send a notification to after any asynchronous call is finished.
-          # TODO: verify emails don't get sent for Synchronous calls.
+          description: A list of emails to notify when a Candor Result is processed that contained new files uploaded to the loan.
           items:
             type: object
             required:
@@ -159,7 +177,6 @@ components:
               type: string
         gse:
           type: string
-          default: FannieMae
           enum:
           - FannieMae
           - FreddieMac
@@ -172,7 +189,7 @@ components:
           $ref: '#/components/schemas/LoanId'
         runId:
           type: integer
-          description: The number of times findings have been processed on this loan file
+          description: The number of times that findings have been processed on this loan file
         timestamp:
           type: string
           format: date-time
@@ -181,48 +198,109 @@ components:
           $ref: '#/components/schemas/Context'
         ezToClose:
           type: string
+          description: Candor Score up to 100 that identifies how hard or easy a loan is to close based on outstanding conditions and their difficulty to obtain. The higher the score the easier to close.
         insuranceCovered:
           type: string
+          enum:
+          - Pending
+          - Available
+          - Not Available
         underwritingStatus:
           type: string
+          description: Overall underwriting status on the loan file. Note that `Clear to Close` means that all "Candor" related conditions have been cleared on a loan file. There may be "Lender" related conditions for items such as a Credit Inquiry Letter, Title, Mortgage Statement still needed; however, Candor has completed it's analysis of the file.
+          enum:
+          - Conditional Approval
+          - Suspended
+          - Declined
+          - Clear to Close
         occupancy:
           type: string
+          description: Candor analytic related to Occupancy.
+          allOf:
+          - $ref: '#/components/schemas/StatusType'
         identity:
           type: string
+          description: Candor analytic related to Borrower Identity, SSN, etc.
         valuation:
           type: string
+          description: Candor analytic related to Property Value, Appraisal, etc.
+          allOf:
+          - $ref: '#/components/schemas/StatusType'
         liabilities:
-          type: string
+          description: Candor analytic related to Liabilities and Credit items.
+          allOf:
+          - $ref: '#/components/schemas/StatusType'
         assets:
-          type: string
+          description: Candor analytic related to Assets, Bank Statements, Large Deposits, etc.
+          allOf:
+          - $ref: '#/components/schemas/StatusType'
         income:
-          type: string
+          description: Candor analytic related to Income, Employment, Paystubs, W2s, etc.
+          allOf:
+          - $ref: '#/components/schemas/StatusType'
         conditions:
           type: array
           items:
+            title: Condition
             properties:
               id:
                 type: string
+                description: Unique identifier for the condition
               status:
-                type: integer
-                # todo: get possible values
+                type: string
+                # LoanDepot: Unfulfilled -> 0, Fulfilled -> 1
                 enum:
-                  - 0
+                  - Unfulfilled
+                  - Fulfilled
               name:
                 type: string
-                description: Condition Name
+                description: Condition assigned name for condition
               description:
                 type: string
-                description: Extended descriptive text for this condition
+                description: Candor provided actual condition verbiage that clearly defines requirements to clear the condition
               priorTo:
                 type: string
+                description: |
+                  - PTA: Prior to Approval, Suspended, Declined
+                  - PTD: Prior to Documents
+                  - AC: Prior to Closing
+                  - PTF: Prior to Funding
+                  - Notifications
+                # LoanDepot: AC -> PTC
+                enum:
+                - PTA
+                - PTD
+                - AC
+                - PTF
+                - Notifications
               owner:
                 type: string
+                description: This identifies the responsible party for the condition
+                enum:
+                - Candor
+                - Lender
               category:
                 type: string
+                description: |
+                  - Credit - Identity
+                  - Credit - Occupancy
+                  - Credit
+                  - Income (i.e., Income/Employment)
+                  - Assets
+                  - Property
+                  - Legal (i.e., Legal/Compliance)
+                enum:
+                - Credit - Identity
+                - Credit - Occupancy
+                - Credit
+                - Income
+                - Assets
+                - Property
+                - Legal
         results:
           type: array
           items:
+            title: Candor Result
             properties:
               name:
                 type: string

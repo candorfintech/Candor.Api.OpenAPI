@@ -14,5 +14,12 @@ This repository hosts the OpenAPI specifications and Swagger UI for the Candor A
 
 ## Changelog
 
+v0.4.0
+- Added enum values and descriptions
+- Fixed some required fields
+- Upper cased the `responseType` values and clarified how this controls the response of the process loan request
+- Added description to Download File endpoint
+- Added recommendation for usable characters in the File Id
+
 v0.3.0
 - initial publish

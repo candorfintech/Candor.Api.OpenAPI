@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.3.0
+  version: 0.4.0
 externalDocs:
   description: OpenAPI SwaggerUI
   url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=ICR
@@ -77,6 +77,9 @@ paths:
     get:
       tags:
       - ICR
+      operationId: DownloadFile
+      summary: Download loan file
+      description: Download a document associated with the specified loan.
       security:
       - candor-api:
         - candorApi/read:icr
@@ -249,17 +252,16 @@ components:
                 properties:
                   code:
                     type: integer
-                    format: int32
                     description: |
-                      - 200: Success
-                      - 300: Duplicate
-                      - 400: Corrupted
-                      - 500: Document Untrusted
+                      - 200: Successfully ICR'd
+                      - 300: Duplicate Document Uploaded
+                      - 400: Document Corrupted, Unable to open, or Editable pdf
+                      - 500: Ineligible Document
                     enum:
-                      - 200
-                      - 300
-                      - 400
-                      - 500
+                    - 200
+                    - 300
+                    - 400
+                    - 500
                   message:
                     type: string
                     description: Descriptive text of the status

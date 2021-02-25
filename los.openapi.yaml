@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api LOS Communication
-  version: 0.3.0
+  version: 0.4.0
 externalDocs:
   description: OpenAPI SwaggerUI
   url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=LOS
@@ -72,13 +72,13 @@ paths:
             schema:
               $ref: '#/components/schemas/ProcessLoan'
             examples:
-              ProcessLoanReqAsync:
-                $ref: '#/components/examples/ProcessLoanReqAsync'
-              ProcessLoanReqSync:
-                $ref: '#/components/examples/ProcessLoanReqSync'
+              ProcessLoanReqNoFiles:
+                $ref: '#/components/examples/ProcessLoanReqNoFiles'
+              ProcessLoanReqWithFiles:
+                $ref: '#/components/examples/ProcessLoanReqWithFiles'
       responses:
         '200':
-          description: Successful synchronous response
+          description: Successful response
           content:
             application/json:
               schema:
@@ -119,10 +119,9 @@ components:
     ProcessLoan:
       type: object
       required:
-      - id
       - loanData
       allOf:
-        - $ref: 'schemas.yaml#/components/schemas/ProcessLoanBase'
+      - $ref: 'schemas.yaml#/components/schemas/ProcessLoanBase'
       properties:
         # DRAFT: possible future structure to accept fraudReport which would
         #   then be pulled and put into loanData before sending to Decisions
@@ -147,6 +146,9 @@ components:
           minItems: 1
           items:
             type: object
+            required:
+            - data
+            - type
             properties:
               data:
                 type: string
@@ -191,17 +193,15 @@ components:
         - id: f8f1a13e-5cca-4a13-aa50-e1ecc6a93af7
           error: File already exists and cannot be overwritten.
 
-    ProcessLoanReqAsync:
-      summary: Asynchronous process loan request
+    ProcessLoanReqNoFiles:
+      summary: Process loan request without files
       value:
-        id: c8e27489-0381-438f-8148-4b7a2379a64c
-        responseType: asynchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         emails:
-          - email: processor@domain.com
-            type: Processor
-          - email: underwriter@domain.com
-            type: Underwriter
+        - email: processor@domain.com
+          type: Processor
+        - email: underwriter@domain.com
+          type: Underwriter
         investor:
           name: Wells Fargo
           productName: 30 Year Fixed Mortgage
@@ -214,28 +214,22 @@ components:
         #   name: John Doe
         #   address: 123 Street View
         loanData:
-          - data: SGVsbG8gV29ybGQ=
-            type: FMN32
-          - data: <xml>...</xml>
-            type: DUXML
-          - data: '{ "json": true }'
-            type: CREDIT
-        filesToProcess:
-          - 371d3620-1c98-4466-9f95-290b7748594d
-          - 9982324b-577e-4061-94f1-c506182cbe82
-          - 69f15f0d-ec1c-4a54-9798-9a2bd0803adb
+        - data: SGVsbG8gV29ybGQ=
+          type: FMN32
+        - data: <xml>...</xml>
+          type: DUXML
+        - data: '{ "json": true }'
+          type: CREDIT
 
-    ProcessLoanReqSync:
-      summary: Synchronous process loan request
+    ProcessLoanReqWithFiles:
+      summary: Process loan request with files
       value:
-        id: c8e27489-0381-438f-8148-4b7a2379a64c
-        responseType: synchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         emails:
-          - email: processor@domain.com
-            type: Processor
-          - email: underwriter@domain.com
-            type: Underwriter
+        - email: processor@domain.com
+          type: Processor
+        - email: underwriter@domain.com
+          type: Underwriter
         investor:
           name: Wells Fargo
           productName: 30 Year Fixed Mortgage
@@ -248,16 +242,16 @@ components:
         #   name: John Doe
         #   address: 123 Street View
         loanData:
-          - data: SGVsbG8gV29ybGQ=
-            type: FMN32
-          - data: <xml>...</xml>
-            type: DUXML
-          - data: '{ "json": true }'
-            type: CREDIT
+        - data: SGVsbG8gV29ybGQ=
+          type: FMN32
+        - data: <xml>...</xml>
+          type: DUXML
+        - data: '{ "json": true }'
+          type: CREDIT
         filesToProcess:
-          - 371d3620-1c98-4466-9f95-290b7748594d
-          - 9982324b-577e-4061-94f1-c506182cbe82
-          - 69f15f0d-ec1c-4a54-9798-9a2bd0803adb
+        - 371d3620-1c98-4466-9f95-290b7748594d
+        - 9982324b-577e-4061-94f1-c506182cbe82
+        - 69f15f0d-ec1c-4a54-9798-9a2bd0803adb
 
   securitySchemes:
     candor-api:

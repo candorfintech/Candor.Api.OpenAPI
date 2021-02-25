@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.3.0
+  version: 0.4.0
 externalDocs:
   description: OpenAPI SwaggerUI
   url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Decisions
@@ -15,7 +15,7 @@ paths:
       tags:
       - Decisions
       summary: Process Loan Data
-      description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `asynchronous`).
+      description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `Synchronous`). If the `request.responseType` is `Asynchronous`, then the loan data will be ingested and just the `candorId` will be returned.
       requestBody:
         content:
           application/json:
@@ -105,12 +105,12 @@ paths:
                   code: 400
                   message: Error Type - Corrupted Document
               outputFiles:
-                - bucket: loan-files
-                  path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/d42e2100-103a-414a-8de7-3d5935716bcd
-                - bucket: loan-files
-                  path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/53965b26-07eb-4498-a1c5-754e00569c83
-                - bucket: loan-files
-                  path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/8770662d-8d25-413a-88c2-d232fea48bfc
+              - bucket: loan-files
+                path: /029d4378-e479-4c53-a671-b3e89d829911/output/c8e27489-0381-438f-8148-4b7a2379a64c/d42e2100-103a-414a-8de7-3d5935716bcd
+              - bucket: loan-files
+                path: /029d4378-e479-4c53-a671-b3e89d829911/output/c8e27489-0381-438f-8148-4b7a2379a64c/53965b26-07eb-4498-a1c5-754e00569c83
+              - bucket: loan-files
+                path: /029d4378-e479-4c53-a671-b3e89d829911/output/c8e27489-0381-438f-8148-4b7a2379a64c/8770662d-8d25-413a-88c2-d232fea48bfc
       responses:
         '202':
           description: Accepted
@@ -168,9 +168,13 @@ components:
       allOf:
         - $ref: 'schemas.yaml#/components/schemas/ProcessLoanBase'
       required:
+      - id
       - customerId
       - sessionId
+      - loanData
       properties:
+        id:
+          $ref: 'schemas.yaml#/components/schemas/LoanId'
         customerId:
           $ref: '#/components/schemas/CustomerId'
         sessionId:
@@ -181,6 +185,9 @@ components:
           minItems: 1
           items:
             type: object
+            required:
+            - data
+            - type
             properties:
               data:
                 type: string
@@ -226,10 +233,10 @@ components:
                 description: |
                   The processed status for this LOS input file.
 
-                  - 200: Success
-                  - 300: Duplicate
-                  - 400: Corrupted
-                  - 500: Document Untrusted
+                  - 200: Successfully ICR'd
+                  - 300: Duplicate Document Uploaded
+                  - 400: Document Corrupted, Unable to open, or Editable pdf
+                  - 500: Ineligible Document
                 required:
                 - code
                 - message
@@ -237,10 +244,10 @@ components:
                   code:
                     type: integer
                     enum:
-                      - 200
-                      - 300
-                      - 400
-                      - 500
+                    - 200
+                    - 300
+                    - 400
+                    - 500
                   message:
                     type: string
                     description: Descriptive text of the status
@@ -280,32 +287,51 @@ components:
       allOf:
         - $ref: 'schemas.yaml#/components/schemas/CandorResult'
       properties:
-        inputFile:
+        filesProcessed:
           type: array
           items:
             type: object
+            title: Processed File
+            required:
+            - id
+            - filename
+            - status
             properties:
               id:
                 type: string
+                description: The unique identifier of this file
+              filename:
+                type: string
+                description: The filename, e.g., "April Bank Statement.pdf"
               status:
                 type: object
                 properties:
                   code:
-                    type: string
-                  message:
-                    type: string
-        outputFiles:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              status:
-                type: object
-                properties:
-                  code:
-                    type: string
+                    type: integer
+                    description: |
+                      The processed status for this file
+
+                      - 200: Successfully ICR'd
+                      - 300: Duplicate Document Uploaded
+                      - 400: Document Corrupted, Unable to open, or Editable pdf
+                      - 401: Unable to match Borrower name on document to applicant; Lender to review
+                      - 402: Unable to match SSN on document to applicant; Lender to review
+                      - 403: Unable to match Employer on document to application; Lender to review
+                      - 404: Unable to match Company Name on document to application; Lender to review
+                      - 405: Document is outdated per guideline requirements
+                      - 406: Successfully ICR'd
+                      - 500: Ineligible Document
+                    enum:
+                    - 200
+                    - 300
+                    - 400
+                    - 401
+                    - 402
+                    - 403
+                    - 404
+                    - 405
+                    - 406
+                    - 500
                   message:
                     type: string
 
@@ -316,7 +342,7 @@ components:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         customerId: CustomerName-Production
         sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
-        responseType: synchronous
+        responseType: Synchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         emails:
           - email: processor@domain.com
@@ -341,7 +367,7 @@ components:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         customerId: CustomerName-Production
         sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
-        responseType: asynchronous
+        responseType: Asynchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         emails:
           - email: processor@domain.com
