@@ -3,11 +3,14 @@ info:
   title: Candor Api LOS Communication
   version: 0.5.0
 externalDocs:
-  description: OpenAPI SwaggerUI
-  url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=LOS
+  description: Changelog
+  url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
 tags:
 - name: LOS
   description: LOS communication
+  externalDocs:
+    description: SwaggerUI
+    url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=LOS
 
 paths:
   /loan/{id}/document:

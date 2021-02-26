@@ -3,11 +3,16 @@ info:
   title: Candor Api Decisions Communication
   version: 0.5.0
 externalDocs:
-  description: OpenAPI SwaggerUI
-  url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Decisions
+  description: Changelog
+  url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
 tags:
 - name: Decisions
+  description: Candor Api calls into Decisions
+  externalDocs:
+    description: SwaggerUI
+    url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Decisions
 - name: Candor Api
+  description: Decisions calls into Candor Api
 
 paths:
   /process-loan-data:

@@ -2,6 +2,9 @@ openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
   version: 0.5.0
+externalDocs:
+  description: Changelog
+  url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
 paths:
   /:
     description: See a definition specific specification
