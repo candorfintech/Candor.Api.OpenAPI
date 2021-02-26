@@ -58,25 +58,25 @@ components:
       - Valid
       - Invalid
 
-    UploadFileRequest:
+    UploadDocumentRequest:
       type: object
-      title: Upload File Request
+      title: Upload Document Request
       required:
-      - files
+      - documents
       properties:
-        files:
+        documents:
           type: array
-          description: A collection of files requesting to be uploaded.
+          description: A collection of documents requesting to be uploaded.
           items:
             type: object
-            description: Metadata about the file requesting to be uploaded.
+            description: Metadata about the document requesting to be uploaded.
               Either the `id`, `filename`, or both must be provided.
             minItems: 1
             properties:
               id:
                 type: string
                 description: |
-                  A unique identifier for this file in the context of this loan. If one is not supplied, one will be created by the Candor Api. It is recommended to stick with the following characters:
+                  A unique identifier for this document in the context of this loan. If one is not supplied, one will be created by the Candor Api. It is recommended to stick with the following characters:
 
                   - `0`-`9`
                   - `a`-`z`
@@ -93,30 +93,30 @@ components:
                 type: string
                 description: The filename, e.g., "April Bank Statement.pdf"
 
-    UploadFileResponse:
+    UploadDocumentResponse:
       type: object
-      title: Upload File Response
+      title: Upload Document Response
       required:
       - id
-      - files
+      - documents
       properties:
         id:
           $ref: '#/components/schemas/LoanId'
-        files:
+        documents:
           type: array
-          description: A collection of successful or failed file upload requests.
+          description: A collection of successful or failed document upload requests.
           items:
             type: object
-            description: Results of a file upload request. It'll either contain the `upload` location, or an `error`.
+            description: Results of a document upload request. It'll either contain the `upload` location, or an `error`.
             required:
             - id
             properties:
               id:
                 type: string
-                description: The original `id` supplied in the request if present, or a unique identifier created for this file by the Candor Api.
+                description: The original `id` supplied in the request if present, or a unique identifier created for this document by the Candor Api.
               error:
                 type: string
-                description: If an error occurred while trying to complete the upload request for this file, this will contain the error message.
+                description: If an error occurred while trying to complete the upload request for this document, this will contain the error message.
               upload:
                 type: object
                 required:
@@ -125,7 +125,7 @@ components:
                   url:
                     type: string
                     format: uri
-                    description: If this file request is valid, this will contain the Url where the file can be uploaded using the `PUT` verb. NOTE, there is an expiration time to this upload url. So it is best to make this request right when you are ready to upload the file.
+                    description: If this document request is valid, this will contain the Url where the document can be uploaded using the `PUT` verb. NOTE, there is an expiration time to this upload url. So it is best to make this request right when you are ready to upload the document.
                   headers:
                     type: object
                     description: Required custom headers that need to be used during the upload PUT request.
@@ -138,7 +138,7 @@ components:
         responseType:
           type: string
           description: |
-            This drives the response type back to the LOS when `filesToProcess` are present. And if no `filesToProcess` are present a Candor Result will be returned in the response.
+            This drives the response type back to the LOS when `documentsToProcess` are present. And if no `documentsToProcess` are present a Candor Result will be returned in the response.
 
             - `Asynchronous`: A `202` response will be returned and the body will **not** contain a Candor Result.
             - `Synchronous`: A `200` response will be returned with a Candor Result in the body.
@@ -153,7 +153,7 @@ components:
         emails:
           type: array
           title: Emails
-          description: A list of emails to notify when a Candor Result is processed that contained new files uploaded to the loan.
+          description: A list of emails to notify when a Candor Result is processed that contained new documents uploaded to the loan.
           items:
             type: object
             required:
@@ -189,7 +189,7 @@ components:
           $ref: '#/components/schemas/LoanId'
         runId:
           type: integer
-          description: The number of times that findings have been processed on this loan file
+          description: The number of times that findings have been processed on this loan document
         timestamp:
           type: string
           format: date-time
@@ -207,7 +207,7 @@ components:
           - Not Available
         underwritingStatus:
           type: string
-          description: Overall underwriting status on the loan file. Note that `Clear to Close` means that all "Candor" related conditions have been cleared on a loan file. There may be "Lender" related conditions for items such as a Credit Inquiry Letter, Title, Mortgage Statement still needed; however, Candor has completed it's analysis of the file.
+          description: Overall underwriting status on the loan document. Note that `Clear to Close` means that all "Candor" related conditions have been cleared on a loan document. There may be "Lender" related conditions for items such as a Credit Inquiry Letter, Title, Mortgage Statement still needed; however, Candor has completed it's analysis of the document.
           enum:
           - Conditional Approval
           - Suspended

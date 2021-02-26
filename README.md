@@ -18,8 +18,8 @@ v0.4.0
 - Added enum values and descriptions
 - Fixed some required fields
 - Upper cased the `responseType` values and clarified how this controls the response of the process loan request
-- Added description to Download File endpoint
-- Added recommendation for usable characters in the File Id
+- Added description to Download Document endpoint
+- Added recommendation for usable characters in the Document Id
 
 v0.3.0
 - initial publish

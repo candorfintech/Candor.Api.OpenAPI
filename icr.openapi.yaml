@@ -14,7 +14,7 @@ paths:
       tags:
       - ICR
       summary: Register Callback
-      description: Subscribe an ICR callback url to receive notifications when files are ready to be processed
+      description: Subscribe an ICR callback url to receive notifications when documents are ready to be processed
       operationId: IcrSubscribe
       security:
       - candor-api:
@@ -36,11 +36,11 @@ paths:
               example:
                 callbackUrl: https://api.icr.com/callback
       callbacks:
-        FilesAvailable:
+        DocumentsAvailable:
           '{$request.body#/callbackUrl}':
             post:
-              summary: Files Available Callback
-              description: Receive notification when files are available for processing.
+              summary: Documents Available Callback
+              description: Receive notification when documents are available for processing.
               requestBody:
                 required: true
                 content:
@@ -63,12 +63,12 @@ paths:
         default:
           description: Unexpected Error
 
-  /loan/{id}/file/{fileId}:
+  /loan/{id}/document/{documentId}:
     parameters:
       - name: id
         $ref: 'schemas.yaml#/components/parameters/LoanId'
-      - name: fileId
-        description: The unique identifier for this file.
+      - name: documentId
+        description: The unique identifier for this document.
         required: true
         in: path
         example: 371d3620-1c98-4466-9f95-290b7748594d
@@ -77,8 +77,8 @@ paths:
     get:
       tags:
       - ICR
-      operationId: DownloadFile
-      summary: Download loan file
+      operationId: DownloadDocument
+      summary: Download loan document
       description: Download a document associated with the specified loan.
       security:
       - candor-api:
@@ -91,39 +91,39 @@ paths:
         404:
           description: Not Found
 
-  /icr/{id}/file:
+  /icr/{id}/document:
     parameters:
     - name: id
       $ref: 'schemas.yaml#/components/parameters/LoanId'
     post:
       tags:
       - ICR
-      operationId: IcrUploadFile
-      summary: Request to upload output files
-      description: Used by the ICR to upload result files associated with loan `{id}`. The request will contain some info about the files to be uploaded such as filename. The results will then contain an upload Url (optionally with mandatory headers) that'll be used to upload the file with a PUT request.
+      operationId: IcrUploadDocument
+      summary: Request to upload output documents
+      description: Used by the ICR to upload result documents associated with loan `{id}`. The request will contain some info about the documents to be uploaded such as filename. The results will then contain an upload Url (optionally with mandatory headers) that'll be used to upload the document with a PUT request.
       security:
       - candor-api:
         - candorApi/write:icr
       requestBody:
         required: true
-        description: A collection of output files that needs to be uploaded to Candor.
+        description: A collection of output documents that needs to be uploaded to Candor.
         content:
           application/json:
             examples:
-              UploadFileRequest:
-                $ref: '#/components/examples/UploadFileRequest'
+              UploadDocumentRequest:
+                $ref: '#/components/examples/UploadDocumentRequest'
             schema:
-              $ref: '#/components/schemas/UploadFileRequest'
+              $ref: '#/components/schemas/UploadDocumentRequest'
       responses:
         '200':
-          description: Request body is valid. Individual inspection of an error on each file should be performed. For files with no error, the ICR would then perform a PUT request at the `upload.url`, using any returned `upload.headers`, and passing the file as the body of the request.
+          description: Request body is valid. Individual inspection of an error on each document should be performed. For documents with no error, the ICR would then perform a PUT request at the `upload.url`, using any returned `upload.headers`, and passing the document as the body of the request.
           content:
             application/json:
               examples:
-                UploadFileResponse:
-                  $ref: '#/components/examples/UploadFileResponse'
+                UploadDocumentResponse:
+                  $ref: '#/components/examples/UploadDocumentResponse'
               schema:
-                $ref: '#/components/schemas/UploadFileResponse'
+                $ref: '#/components/schemas/UploadDocumentResponse'
         '400':
           description: Error in Request Body
         default:
@@ -136,9 +136,9 @@ paths:
     post:
       tags:
       - ICR
-      operationId: IcrFilesProcessed
-      summary: Report Files Processed
-      description: Used by the ICR to report files processed and their status. This should be the same location as the `callback` property in the FilesAvailable callback event.
+      operationId: IcrDocumentsProcessed
+      summary: Report Documents Processed
+      description: Used by the ICR to report documents processed and their status. This should be the same location as the `callback` property in the DocumentsAvailable callback event.
       security:
       - candor-api:
         - candorApi/write:icr
@@ -147,17 +147,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FilesProcessed'
+              $ref: '#/components/schemas/DocumentsProcessed'
             examples:
-              FilesProcessedRequest:
-                $ref: '#/components/examples/FilesProcessedRequest'
+              DocumentsProcessedRequest:
+                $ref: '#/components/examples/DocumentsProcessedRequest'
       responses:
         202:
           description: Accepted
         400:
           description: Unexpected Request Body.
         404:
-          description: Either an input or output file was not found.
+          description: Either an input or output document was not found.
 
 
 components:
@@ -169,7 +169,7 @@ components:
       - id
       - context
       - callback
-      - files
+      - documents
       properties:
         id:
           $ref: 'schemas.yaml#/components/schemas/LoanId'
@@ -180,9 +180,9 @@ components:
           format: uri
           default: /icr/{id}
           description: The Url where results should be POST'ed.
-        files:
+        documents:
           type: array
-          description: The collection of input files to be processed.
+          description: The collection of input documents to be processed.
           minItems: 1
           items:
             type: object
@@ -192,58 +192,58 @@ components:
             properties:
               id:
                 type: string
-                description: The unique identifier for this file
+                description: The unique identifier for this document
               url:
                 type: string
-                description: The Url where this file can be downloaded from. This Url will require the use of Candor Authentication and will need to follow 302 redirects.
-                default: /loan/{id}/file/{fileId}
+                description: The Url where this document can be downloaded from. This Url will require the use of Candor Authentication and will need to follow 302 redirects.
+                default: /loan/{id}/document/{documentId}
 
-    UploadFileRequest:
+    UploadDocumentRequest:
       type: object
-      title: Upload File Request
+      title: Upload Document Request
       required:
       - context
-      - files
+      - documents
       allOf:
-      - $ref: 'schemas.yaml#/components/schemas/UploadFileRequest'
+      - $ref: 'schemas.yaml#/components/schemas/UploadDocumentRequest'
       properties:
         context:
           $ref: 'schemas.yaml#/components/schemas/Context'
     
-    UploadFileResponse:
+    UploadDocumentResponse:
       type: object
-      title: Upload File Response
+      title: Upload Document Response
       allOf:
-      - $ref: 'schemas.yaml#/components/schemas/UploadFileResponse'
+      - $ref: 'schemas.yaml#/components/schemas/UploadDocumentResponse'
       properties:
         context:
           $ref: 'schemas.yaml#/components/schemas/Context'
 
-    FilesProcessed:
+    DocumentsProcessed:
       type: object
-      title: Files Processed Request
+      title: Documents Processed Request
       required:
         - id
         - context
-        - inputFiles
-        - outputFileIds
+        - inputDocuments
+        - outputDocumentIds
       properties:
         context:
           $ref: 'schemas.yaml#/components/schemas/Context'
-        inputFiles:
+        inputDocuments:
           type: array
-          title: Input File Statuses
-          description: A list of the input files and their processed status
+          title: Input Document Statuses
+          description: A list of the input documents and their processed status
           minItems: 1
           items:
-            title: File Status
+            title: Document Status
             required:
             - id
             - status
             properties:
               id:
                 type: string
-                description: The unique identifier for this file. This should match the id in the FilesAvailable callback.
+                description: The unique identifier for this document. This should match the id in the DocumentsAvailable callback.
               status:
                 type: object
                 required:
@@ -265,69 +265,69 @@ components:
                   message:
                     type: string
                     description: Descriptive text of the status
-        outputFileIds:
+        outputDocumentIds:
           type: array
-          title: Output File Ids
-          description: An Id list of the output files generated from the inputFiles
+          title: Output Document Ids
+          description: An Id list of the output documents generated from the inputDocuments
           minItems: 1
           items:
             type: string
-            description: The unique identifier given to this output file from the upload output file response.
+            description: The unique identifier given to this output document from the upload output document response.
 
   examples:
 
     Callback:
-      summary: Files available for processing (FilesAvailable)
+      summary: Documents available for processing (DocumentsAvailable)
       value:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         callback: https://api.condortechnologies.com/icr/c8e27489-0381-438f-8148-4b7a2379a64c
-        files:
+        documents:
         - id: 371d3620-1c98-4466-9f95-290b7748594d
-          url: https://api.candortechnologies.com/loan/c8e27489-0381-438f-8148-4b7a2379a64c/file/371d3620-1c98-4466-9f95-290b7748594d
+          url: https://api.candortechnologies.com/loan/c8e27489-0381-438f-8148-4b7a2379a64c/document/371d3620-1c98-4466-9f95-290b7748594d
         - id: 9982324b-577e-4061-94f1-c506182cbe82
-          url: https://api.candortechnologies.com/loan/c8e27489-0381-438f-8148-4b7a2379a64c/file/9982324b-577e-4061-94f1-c506182cbe82
+          url: https://api.candortechnologies.com/loan/c8e27489-0381-438f-8148-4b7a2379a64c/document/9982324b-577e-4061-94f1-c506182cbe82
         - id: 69f15f0d-ec1c-4a54-9798-9a2bd0803adb
-          url: https://api.candortechnologies.com/loan/c8e27489-0381-438f-8148-4b7a2379a64c/file/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
+          url: https://api.candortechnologies.com/loan/c8e27489-0381-438f-8148-4b7a2379a64c/document/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
 
-    UploadFileRequest:
-      summary: Request to upload multiple files with varying input.
+    UploadDocumentRequest:
+      summary: Request to upload multiple documents with varying input.
       value:
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
-        files:
+        documents:
         - id: d42e2100-103a-414a-8de7-3d5935716bcd
           filename: W2-1.pdf
         - id: 53965b26-07eb-4498-a1c5-754e00569c83
         - filename: PayStub-1.pdf
         - id: 63cc7e02-31ca-46e2-b9af-d2efe2eac4a5
 
-    UploadFileResponse:
-      summary: Response of multiple file upload request.
+    UploadDocumentResponse:
+      summary: Response of multiple document upload request.
       value:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
-        files:
+        documents:
         - id: d42e2100-103a-414a-8de7-3d5935716bcd
           upload:
-            url: https://bucket.s3.region.amazonws.com/file/path/d42e2100-103a-414a-8de7-3d5935716bcd.pdf?presigned-data
+            url: https://bucket.s3.region.amazonws.com/document/path/d42e2100-103a-414a-8de7-3d5935716bcd.pdf?presigned-data
             headers:
               x-amz-meta-filename: W2-1.pdf
         - id: 53965b26-07eb-4498-a1c5-754e00569c83
           upload:
-            url: https://bucket.s3.region.amazonws.com/file/path/53965b26-07eb-4498-a1c5-754e00569c83?presigned-data
+            url: https://bucket.s3.region.amazonws.com/document/path/53965b26-07eb-4498-a1c5-754e00569c83?presigned-data
         - id: 8770662d-8d25-413a-88c2-d232fea48bfc
           upload:
-            url: https://bucket.s3.region.amazonws.com/file/path/69f15f0d-ec1c-4a54-9798-9a2bd0803adb.pdf?presigned-data
+            url: https://bucket.s3.region.amazonws.com/document/path/69f15f0d-ec1c-4a54-9798-9a2bd0803adb.pdf?presigned-data
             headers:
               x-amz-meta-filename: PayStub-1.pdf
         - id: 63cc7e02-31ca-46e2-b9af-d2efe2eac4a5
-          error: File already exists and cannot be overwritten.
+          error: Document already exists and cannot be overwritten.
 
-    FilesProcessedRequest:
-      summary: Files Processed Request
+    DocumentsProcessedRequest:
+      summary: Documents Processed Request
       value:
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
-        inputFiles:
+        inputDocuments:
         - id: 371d3620-1c98-4466-9f95-290b7748594d
           status:
             code: 200
@@ -340,7 +340,7 @@ components:
           status:
             code: 400
             message: Error Type - Corrupted Document
-        outputFileIds:
+        outputDocumentIds:
           - d42e2100-103a-414a-8de7-3d5935716bcd
           - 53965b26-07eb-4498-a1c5-754e00569c83
           - 8770662d-8d25-413a-88c2-d232fea48bfc
