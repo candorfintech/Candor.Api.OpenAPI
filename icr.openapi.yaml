@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.5.0
+  version: 0.6.0
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -28,7 +28,7 @@ paths:
         content:
           application/json:
             schema:
-              title: Callback Url
+              title: Callback Registration
               type: object
               required:
               - callbackUrl
@@ -37,8 +37,58 @@ paths:
                   type: string
                   format: uri
                   description: The callback url
-              example:
-                callbackUrl: https://api.icr.com/callback
+                auth:
+                  type: object
+                  title: Authentication
+                  description: If authentication is required for the `callbackUrl`, this object represents the type of authentication to use as well as any needed parameters. Additional supported authentication types could be added as needed.
+                  oneOf:
+                  - type: object
+                    title: Header Authentication
+                    description: Static headers added to the callback request
+                    required:
+                    - type
+                    - headers
+                    properties:
+                      type:
+                        type: string
+                        description: Constant value of `header`
+                        default: header
+                        enum:
+                        - header
+                      headers:
+                        type: object
+                        description: A collection of keys and values that'll be added to the headers of the callback request.
+                        additionalProperties:
+                          type: string
+            examples:
+              CallbackRegNoAuth:
+                summary: Callback registration without Auth
+                value:
+                  callbackUrl: https://api.icr.com/callback
+              CallbackRegWithCustomHeaders:
+                summary: Callback registration with Custom Header(s) Auth
+                value:
+                  callbackUrl: https://api.icr.com/callback
+                  auth:
+                    type: headers
+                    headers:
+                      x-api-key: abc-123
+              CallbackRegWithApiKey:
+                summary: Callback registration with Bearer Api Key
+                value:
+                  callbackUrl: https://api.icr.com/callback
+                  auth:
+                    type: headers
+                    headers:
+                      Authorization: Bearer secret-api-key
+              CallbackRegWithBasic:
+                summary: Callback registration with Basic Auth
+                value:
+                  callbackUrl: https://api.icr.com/callback
+                  auth:
+                    type: headers
+                    headers:
+                      Authorization: Basic aGVsbG86d29ybGQ=
       callbacks:
         DocumentsAvailable:
           '{$request.body#/callbackUrl}':
