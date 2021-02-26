@@ -14,6 +14,9 @@ This repository hosts the OpenAPI specifications and Swagger UI for the Candor A
 
 ## Changelog
 
+v0.5.0
+- Renamed the term "file" to "document" in relation to documents associated with a loan to avoid the confusion with the term "loan file" (the overall loan application file)
+
 v0.4.0
 - Added enum values and descriptions
 - Fixed some required fields
