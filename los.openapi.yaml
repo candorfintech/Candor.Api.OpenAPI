@@ -15,8 +15,7 @@ tags:
 paths:
   /loan/{id}/document:
     parameters:
-    - name: id
-      $ref: 'schemas.yaml#/components/parameters/LoanId'
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
     post:
       tags:
       - LOS
@@ -57,13 +56,13 @@ paths:
 
   /loan/{id}:
     parameters:
-    - name: id
-      $ref: 'schemas.yaml#/components/parameters/LoanId'
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
     post:
       tags:
       - LOS
       operationId: LosProcessLoan
       summary: Process loan with optional documents
+      description: Submits Loan data, optionally with documents, to be processed by Candor.
       security:
       - candor-api:
         - candorApi/write:los
@@ -102,7 +101,7 @@ paths:
                 income: Pending
                 conditions:
                 - id: 151ce1d9-90e2-4e32-9337-8de6d8124e50
-                  status: 0
+                  status: Unfulfilled
                   name: Condition Name
                   description: Extended descriptive text for this condition
                   priorTo: PTD

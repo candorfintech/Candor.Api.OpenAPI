@@ -70,7 +70,7 @@ paths:
                 value:
                   callbackUrl: https://api.icr.com/callback
                   auth:
-                    type: headers
+                    type: header
                     headers:
                       x-api-key: abc-123
               CallbackRegWithApiKey:
@@ -78,7 +78,7 @@ paths:
                 value:
                   callbackUrl: https://api.icr.com/callback
                   auth:
-                    type: headers
+                    type: header
                     headers:
                       Authorization: Bearer secret-api-key
               CallbackRegWithBasic:
@@ -86,7 +86,7 @@ paths:
                 value:
                   callbackUrl: https://api.icr.com/callback
                   auth:
-                    type: headers
+                    type: header
                     headers:
                       Authorization: Basic aGVsbG86d29ybGQ=
       callbacks:
@@ -119,15 +119,14 @@ paths:
 
   /loan/{id}/document/{documentId}:
     parameters:
-      - name: id
-        $ref: 'schemas.yaml#/components/parameters/LoanId'
-      - name: documentId
-        description: The unique identifier for this document.
-        required: true
-        in: path
-        example: 371d3620-1c98-4466-9f95-290b7748594d
-        schema:
-          type: string
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
+    - name: documentId
+      description: The unique identifier for this document.
+      required: true
+      in: path
+      example: 371d3620-1c98-4466-9f95-290b7748594d
+      schema:
+        type: string
     get:
       tags:
       - ICR
@@ -138,17 +137,16 @@ paths:
       - candor-api:
         - candorApi/read:icr
       responses:
-        302:
+        '302':
           description: Redirect to authorized download Url.
-        403:
+        '403':
           description: Unauthorized
-        404:
+        '404':
           description: Not Found
 
   /icr/{id}/document:
     parameters:
-    - name: id
-      $ref: 'schemas.yaml#/components/parameters/LoanId'
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
     post:
       tags:
       - ICR
@@ -185,8 +183,7 @@ paths:
 
   /icr/{id}:
     parameters:
-    - name: id
-      $ref: 'schemas.yaml#/components/parameters/LoanId'
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
     post:
       tags:
       - ICR
@@ -206,11 +203,11 @@ paths:
               DocumentsProcessedRequest:
                 $ref: '#/components/examples/DocumentsProcessedRequest'
       responses:
-        202:
+        '202':
           description: Accepted
-        400:
+        '400':
           description: Unexpected Request Body.
-        404:
+        '404':
           description: Either an input or output document was not found.
 
 
@@ -277,7 +274,6 @@ components:
       type: object
       title: Documents Processed Request
       required:
-        - id
         - context
         - inputDocuments
         - outputDocumentIds

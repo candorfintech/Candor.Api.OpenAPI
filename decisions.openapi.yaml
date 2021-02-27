@@ -19,6 +19,7 @@ paths:
     post:
       tags:
       - Decisions
+      operationId: DecisionsProcessLoan
       summary: Process Loan Data
       description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `Synchronous`). If the `request.responseType` is `Asynchronous`, then the loan data will be ingested and just the `candorId` will be returned.
       requestBody:
@@ -81,6 +82,7 @@ paths:
     post:
       tags:
       - Decisions
+      operationId: DecisionsProcessDocuments
       summary: Process Loan Documents
       description: 'This will always be an asynchronous call and will always occur after a call to "Process Loan Data" has already occurred.'
       requestBody:
@@ -124,13 +126,13 @@ paths:
 
   /loan/{id}/results:
     parameters:
-    - name: id
-      $ref: 'schemas.yaml#/components/parameters/LoanId'
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
     post:
       tags:
       - Candor Api
       operationId: CandorResults
       summary: Report results back to Candor Api to then notify the LOS
+      description: Candor Results sent to Candor Api to notify the LOS
       servers:
       - url: https://api.condortechnoloties.com
       security:
