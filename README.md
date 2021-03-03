@@ -21,6 +21,10 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+v0.7.0
+- Allow ability to overwrite previously uploaded document
+- Send filename to Decisions in `inputDocuments` and `outputDocuments`
+
 v0.6.0
 - Added header authentication option to ICR callback registration
 

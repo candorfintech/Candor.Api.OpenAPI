@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.6.0
+  version: 0.7.0
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -346,10 +346,9 @@ components:
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         documents:
         - id: d42e2100-103a-414a-8de7-3d5935716bcd
-          filename: W2-1.pdf
+          filename: W2-1.json
         - id: 53965b26-07eb-4498-a1c5-754e00569c83
-        - filename: PayStub-1.pdf
-        - id: 63cc7e02-31ca-46e2-b9af-d2efe2eac4a5
+        - filename: PayStub-1.json
 
     UploadDocumentResponse:
       summary: Response of multiple document upload request.
@@ -359,19 +358,17 @@ components:
         documents:
         - id: d42e2100-103a-414a-8de7-3d5935716bcd
           upload:
-            url: https://bucket.s3.region.amazonws.com/document/path/d42e2100-103a-414a-8de7-3d5935716bcd.pdf?presigned-data
+            url: https://bucket.s3.region.amazonws.com/document/path/d42e2100-103a-414a-8de7-3d5935716bcd.json?presigned-data
             headers:
-              x-amz-meta-filename: W2-1.pdf
+              x-amz-meta-filename: W2-1.json
         - id: 53965b26-07eb-4498-a1c5-754e00569c83
           upload:
             url: https://bucket.s3.region.amazonws.com/document/path/53965b26-07eb-4498-a1c5-754e00569c83?presigned-data
         - id: 8770662d-8d25-413a-88c2-d232fea48bfc
           upload:
-            url: https://bucket.s3.region.amazonws.com/document/path/69f15f0d-ec1c-4a54-9798-9a2bd0803adb.pdf?presigned-data
+            url: https://bucket.s3.region.amazonws.com/document/path/69f15f0d-ec1c-4a54-9798-9a2bd0803adb.json?presigned-data
             headers:
-              x-amz-meta-filename: PayStub-1.pdf
-        - id: 63cc7e02-31ca-46e2-b9af-d2efe2eac4a5
-          error: Document already exists and cannot be overwritten.
+              x-amz-meta-filename: PayStub-1.json
 
     DocumentsProcessedRequest:
       summary: Documents Processed Request
