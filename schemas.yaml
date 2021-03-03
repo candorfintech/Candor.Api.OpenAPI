@@ -141,12 +141,12 @@ components:
         responseType:
           type: string
           description: |
-            This drives the response type back to the LOS when `documentsToProcess` are present. And if no `documentsToProcess` are present a Candor Result will be returned in the response.
+            This drives the response type back to the LOS. The system default is `Asynchronous` which can be overridden as a Customer setting, and then additionally overridden here per request.
 
             - `Asynchronous`: A `202` response will be returned and the body will **not** contain a Candor Result.
             - `Synchronous`: A `200` response will be returned with a Candor Result in the body.
 
-            The system default is `Asynchronous` which can be overridden as a Customer setting, and then additionally overridden here per request.
+            If `documentsToProcess` are present, the Candor Results of the processed documents will always be an Asynchronous callback notification. If the original request was also `Asynchronous`, then there will only be one Candor Results returned after documents are processed as a callback notification. If the original request was `Synchronous`, then a loan data Candor Result will be returned in the response followed by another Candor Result for the processed documents which be sent as a callback notification.
           default: Asynchronous
           enum:
           - Asynchronous

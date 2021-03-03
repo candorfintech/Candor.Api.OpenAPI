@@ -80,7 +80,7 @@ paths:
                 $ref: '#/components/examples/ProcessLoanReqWithDocuments'
       responses:
         '200':
-          description: Successful response
+          description: Successful response including loan data Candor Results
           content:
             application/json:
               schema:
@@ -112,7 +112,12 @@ paths:
                   section: Candor - Findings Page
                   base64: SGVsbG8gV29ybGQ=
         '202':
-          description: Successful asynchronous response (no body returned)
+          description: |
+            Successful asynchronous response (no body returned).
+            
+            The processing of the loan will be done after this response and the caller will be notified of the results when Candor has results to report.
+            
+            NOTE: A synchronous request could be converted into an asynchronous request if a Candor Result cannot be returned at this time.
         '400':
           description: An error exists in the request body
 
