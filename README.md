@@ -21,6 +21,11 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+v0.8.0
+- Changed ICR file download URL structure. Consumers shouldn't be affected by this change as the full proper URL is provided to them in the `DocumentsAvailable` callback.
+- Fixed misspelling of `FNM32`
+- Updated Swagger UI to v3.45.0
+
 v0.7.0
 - Allow ability to overwrite previously uploaded document
 - Send filename to Decisions in `inputDocuments` and `outputDocuments`

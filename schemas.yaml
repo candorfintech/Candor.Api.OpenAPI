@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.7.0
+  version: 0.8.0
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -36,7 +36,7 @@ components:
       title: Loan Data Type
       description: |
         The various loan data types that can be associated with the loan.
-        - FMN32: Fannie Mae v3.2
+        - FNM32: Fannie Mae v3.2
         - DUXML: Fannie Mae Desktop Underwriter
         - LPAXML: Loan Product Advisor
         - CREDIT: Credit Provider's Xml (Core Logic)
@@ -45,7 +45,7 @@ components:
         - FINICITY: Verification of assets vendor
         - FRMFREE: Asset Validation
       enum:
-      - FMN32
+      - FNM32
       - DUXML
       - LPAXML
       - CREDIT
