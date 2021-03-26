@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.8.0
+  version: 0.8.1
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -97,30 +97,30 @@ paths:
               sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
               inputDocuments:
               - bucket: loan-documents
-                path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/371d3620-1c98-4466-9f95-290b7748594d
+                path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/371d3620-1c98-4466-9f95-290b7748594d
                 filename: HelloWorld.pdf
                 status:
                   code: 200
                   message: Successfully ICR'd
               - bucket: loan-documents
-                path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/9982324b-577e-4061-94f1-c506182cbe82
+                path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/9982324b-577e-4061-94f1-c506182cbe82
                 status:
                   code: 300
                   message: Duplicate request
               - bucket: loan-documents
-                path: /029d4378-e479-4c53-a671-b3e89d829911/input/c8e27489-0381-438f-8148-4b7a2379a64c/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
+                path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
                 filename: FooBar.pdf
                 status:
                   code: 400
                   message: Error Type - Corrupted Document
               outputDocuments:
               - bucket: loan-documents
-                path: /029d4378-e479-4c53-a671-b3e89d829911/output/c8e27489-0381-438f-8148-4b7a2379a64c/d42e2100-103a-414a-8de7-3d5935716bcd
+                path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/d42e2100-103a-414a-8de7-3d5935716bcd
                 filename: W2-1.json
               - bucket: loan-documents
-                path: /029d4378-e479-4c53-a671-b3e89d829911/output/c8e27489-0381-438f-8148-4b7a2379a64c/53965b26-07eb-4498-a1c5-754e00569c83
+                path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/53965b26-07eb-4498-a1c5-754e00569c83
               - bucket: loan-documents
-                path: /029d4378-e479-4c53-a671-b3e89d829911/output/c8e27489-0381-438f-8148-4b7a2379a64c/8770662d-8d25-413a-88c2-d232fea48bfc
+                path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/8770662d-8d25-413a-88c2-d232fea48bfc
                 filename: PayStub-1.json
       responses:
         '202':
