@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.8.1
+  version: 0.9.0
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -218,6 +218,8 @@ paths:
             examples:
               DocumentsProcessedRequest:
                 $ref: '#/components/examples/DocumentsProcessedRequest'
+              DeletedDocumentsProcessedRequest:
+                $ref: '#/components/examples/DeletedDocumentsProcessedRequest'
       responses:
         '202':
           description: Accepted
@@ -335,7 +337,14 @@ components:
           type: array
           title: Output Document Ids
           description: An Id list of the output documents generated from the inputDocuments
-          minItems: 1
+          minItems: 0
+          items:
+            type: string
+            description: The unique identifier given to this output document from the upload output document response.
+        deletedOutputDocumentIds:
+          type: array
+          title: Delete Output Document Ids
+          description: An Id list of previously submitted output documents that should be considered deleted and removed from further processing.
           items:
             type: string
             description: The unique identifier given to this output document from the upload output document response.
@@ -404,6 +413,29 @@ components:
             code: 400
             message: Error Type - Corrupted Document
         outputDocumentIds:
+          - d42e2100-103a-414a-8de7-3d5935716bcd
+          - 53965b26-07eb-4498-a1c5-754e00569c83
+          - 8770662d-8d25-413a-88c2-d232fea48bfc
+
+    DeletedDocumentsProcessedRequest:
+      summary: Documents Processed Request with Deleted Documents
+      value:
+        context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        inputDocuments:
+        - id: 371d3620-1c98-4466-9f95-290b7748594d
+          status:
+            code: 200
+            message: Successfully ICR'd
+        - id: 9982324b-577e-4061-94f1-c506182cbe82
+          status:
+            code: 300
+            message: Duplicate request
+        - id: 69f15f0d-ec1c-4a54-9798-9a2bd0803adb
+          status:
+            code: 400
+            message: Error Type - Corrupted Document
+        outputDocumentIds: []
+        deletedOutputDocumentIds:
           - d42e2100-103a-414a-8de7-3d5935716bcd
           - 53965b26-07eb-4498-a1c5-754e00569c83
           - 8770662d-8d25-413a-88c2-d232fea48bfc

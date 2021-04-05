@@ -21,6 +21,10 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+v0.9.0
+- Added a way for an ICR to report that a previously processed output file has been marked as deleted and should not be considered for further processing
+- Update Swagger UI to v3.46.0
+
 v0.8.1
 - Fixed the `$.outputDocuments.path` examples for Decisions' Process Loan Documents
 - Update Swagger UI to v3.45.1
