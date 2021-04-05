@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api LOS Communication
-  version: 0.9.0
+  version: 0.9.1
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -149,7 +149,7 @@ components:
         loanData:
           type: array
           description: The various loan data associated with the loan. There
-            must exist at least the FNM32 loan application data.
+            must exist at least the URLA data.
           minItems: 1
           items:
             type: object
@@ -222,7 +222,7 @@ components:
         #   address: 123 Street View
         loanData:
         - data: SGVsbG8gV29ybGQ=
-          type: FNM32
+          type: URLA
         - data: <xml>...</xml>
           type: DUXML
         - data: '{ "json": true }'
@@ -250,7 +250,7 @@ components:
         #   address: 123 Street View
         loanData:
         - data: SGVsbG8gV29ybGQ=
-          type: FNM32
+          type: URLA
         - data: <xml>...</xml>
           type: DUXML
         - data: '{ "json": true }'

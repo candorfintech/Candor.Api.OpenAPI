@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.9.0
+  version: 0.9.1
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -171,7 +171,7 @@ components:
           $ref:  "#/components/schemas/SessionId"
         loanData:
           type: array
-          description: The various loan data associated with the loan. There must exist at least the FNM32 loan application data.
+          description: The various loan data associated with the loan. There must exist at least the URLA data.
           minItems: 1
           items:
             type: object
@@ -349,7 +349,7 @@ components:
         gse: FannieMae
         loanData:
           - data: SGVsbG8gV29ybGQ=
-            type: FNM32
+            type: URLA
           - data: SGVsbG8gV29ybGQ=
             type: DUXML
           - data: SGVsbG8gV29ybGQ=
@@ -374,7 +374,7 @@ components:
         gse: FannieMae
         loanData:
           - data: SGVsbG8gV29ybGQ=
-            type: FNM32
+            type: URLA
           - data: SGVsbG8gV29ybGQ=
             type: DUXML
           - data: SGVsbG8gV29ybGQ=

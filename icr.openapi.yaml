@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.9.0
+  version: 0.9.1
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog

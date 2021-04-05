@@ -21,6 +21,9 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+v0.9.1
+- Updated `FNM32` to instead be `URLA`: Universal Residential Loan Application
+
 v0.9.0
 - Added a way for an ICR to report that a previously processed output file has been marked as deleted and should not be considered for further processing
 - Update Swagger UI to v3.46.0
