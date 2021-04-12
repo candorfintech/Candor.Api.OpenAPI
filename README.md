@@ -21,6 +21,11 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+v0.10.0
+- Change `ezToClose` to `insuranceScore`
+- Decision documents to/from all have id, bucket, path, and no filename
+- add `parentId` to `documentsProcessed`
+
 v0.9.1
 - Updated `FNM32` to instead be `URLA`: Universal Residential Loan Application
 

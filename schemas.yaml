@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.9.1
+  version: 0.10.0
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -17,7 +17,7 @@ components:
       required: true
       example: c8e27489-0381-438f-8148-4b7a2379a64c
       schema:
-        $ref: 'schemas.yaml#/components/schemas/LoanId'
+        $ref: '#/components/schemas/LoanId'
 
   schemas:
     LoanId:
@@ -199,7 +199,7 @@ components:
           description: An ISO-8601 formatted date/time of when this was result was generated
         context:
           $ref: '#/components/schemas/Context'
-        ezToClose:
+        insuranceScore:
           type: string
           description: Candor Score up to 100 that identifies how hard or easy a loan is to close based on outstanding conditions and their difficulty to obtain. The higher the score the easier to close.
         insuranceCovered:
