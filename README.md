@@ -24,7 +24,10 @@ You can view and run this locally using a local static file server. Some example
 v0.10.0
 - Change `ezToClose` to `insuranceScore`
 - Decision documents to/from all have id, bucket, path, and no filename
-- add `parentId` to `documentsProcessed`
+- Add `parentId` to `documentsProcessed`
+- Changed casing of Decisions' `sessionid`
+- Added required Decisions' property `outputtype: "Json"`
+- Changed input/output/documentsProcessed `id` to `fileId`, and changed `parentId` to `parentFileId`
 
 v0.9.1
 - Updated `FNM32` to instead be `URLA`: Universal Residential Loan Application

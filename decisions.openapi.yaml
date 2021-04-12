@@ -137,14 +137,19 @@ components:
     SessionId:
       type: string
       description: "Decisions' internal Auth Id for this customer"
+    OutputType:
+      type: string
+      description: The response type from Decisions. This will always be "Json"
+      enum:
+        - Json
     CandorDocument:
       type: object
       required:
-        - id
+        - fileId
         - bucket
         - path
       properties:
-        id:
+        fileId:
           type: string
           description: The Candor Api unique identifier for this document
         bucket:
@@ -161,15 +166,18 @@ components:
       required:
       - id
       - customerId
-      - sessionId
+      - sessionid
+      - outputtype
       - loanData
       properties:
         id:
           $ref: 'schemas.yaml#/components/schemas/LoanId'
         customerId:
           $ref: '#/components/schemas/CustomerId'
-        sessionId:
+        sessionid:
           $ref:  "#/components/schemas/SessionId"
+        outputtype:
+          $ref: '#/components/schemas/OutputType'
         loanData:
           type: array
           description: The various loan data associated with the loan. There must exist at least the URLA data.
@@ -193,7 +201,8 @@ components:
       - id
       - context
       - candorId
-      - sessionId
+      - sessionid
+      - outputtype
       - inputDocuments
       - outputDocuments
       properties:
@@ -203,8 +212,10 @@ components:
           $ref: 'schemas.yaml#/components/schemas/Context'
         candorId:
           $ref:  "#/components/schemas/CandorId"
-        sessionId:
+        sessionid:
           $ref:  "#/components/schemas/SessionId"
+        outputtype:
+          $ref:  "#/components/schemas/OutputType"
         inputDocuments:
           type: array
           description: A list of LOS input documents and its processed status
@@ -285,9 +296,10 @@ components:
             allOf:
               - $ref: '#/components/schemas/CandorDocument'
             required:
+            - parentFileId
             - status
             properties:
-              parentId:
+              parentFileId:
                 type: string
                 description: The unique identifier of the source document (original inputDocument).
               status:
@@ -328,7 +340,8 @@ components:
       value:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         customerId: CustomerName-Production
-        sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        outputtype: Json
         responseType: Synchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         emails:
@@ -353,7 +366,8 @@ components:
       value:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         customerId: CustomerName-Production
-        sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        outputtype: Json
         responseType: Asynchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         emails:
@@ -379,34 +393,35 @@ components:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
-        sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        outputtype: Json
         inputDocuments:
-        - id: 056960be-e703-4eeb-8f0a-3ea58063ba34
+        - fileId: 056960be-e703-4eeb-8f0a-3ea58063ba34
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/371d3620-1c98-4466-9f95-290b7748594d
           status:
             code: 200
             message: Successfully ICR'd
-        - id: 5b445ebd-e16c-4613-9b7b-41e57334b073
+        - fileId: 5b445ebd-e16c-4613-9b7b-41e57334b073
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/9982324b-577e-4061-94f1-c506182cbe82
           status:
             code: 300
             message: Duplicate request
-        - id: 75717e24-8102-4140-9c01-5044928cae2e
+        - fileId: 75717e24-8102-4140-9c01-5044928cae2e
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
           status:
             code: 400
             message: Error Type - Corrupted Document
         outputDocuments:
-        - id: 0de5531b-7e6c-426e-a3ba-5461f149beaf
+        - fileId: 0de5531b-7e6c-426e-a3ba-5461f149beaf
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/d42e2100-103a-414a-8de7-3d5935716bcd
-        - id: ea1609fb-72ef-416e-9659-8aabc54415d6
+        - fileId: ea1609fb-72ef-416e-9659-8aabc54415d6
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/53965b26-07eb-4498-a1c5-754e00569c83
-        - id: 1e72bdef-bfb3-4214-9a61-463e6b8070fb
+        - fileId: 1e72bdef-bfb3-4214-9a61-463e6b8070fb
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/8770662d-8d25-413a-88c2-d232fea48bfc
 
@@ -416,36 +431,37 @@ components:
         id: c8e27489-0381-438f-8148-4b7a2379a64c
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
-        sessionId: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
+        outputtype: Json
         inputDocuments:
-        - id: 056960be-e703-4eeb-8f0a-3ea58063ba34
+        - fileId: 056960be-e703-4eeb-8f0a-3ea58063ba34
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/371d3620-1c98-4466-9f95-290b7748594d
           status:
             code: 200
             message: Successfully ICR'd
-        - id: 5b445ebd-e16c-4613-9b7b-41e57334b073
+        - fileId: 5b445ebd-e16c-4613-9b7b-41e57334b073
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/9982324b-577e-4061-94f1-c506182cbe82
           status:
             code: 300
             message: Duplicate request
-        - id: 75717e24-8102-4140-9c01-5044928cae2e
+        - fileId: 75717e24-8102-4140-9c01-5044928cae2e
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
           status:
             code: 400
             message: Error Type - Corrupted Document
         outputDocuments:
-        - id: 0de5531b-7e6c-426e-a3ba-5461f149beaf
+        - fileId: 0de5531b-7e6c-426e-a3ba-5461f149beaf
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/d42e2100-103a-414a-8de7-3d5935716bcd
           deleted: true
-        - id: ea1609fb-72ef-416e-9659-8aabc54415d6
+        - fileId: ea1609fb-72ef-416e-9659-8aabc54415d6
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/53965b26-07eb-4498-a1c5-754e00569c83
           deleted: true
-        - id: 1e72bdef-bfb3-4214-9a61-463e6b8070fb
+        - fileId: 1e72bdef-bfb3-4214-9a61-463e6b8070fb
           bucket: loan-documents
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/output/8770662d-8d25-413a-88c2-d232fea48bfc
           deleted: true
