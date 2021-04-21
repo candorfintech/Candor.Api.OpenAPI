@@ -374,13 +374,19 @@ components:
                     type: integer
                     description: |
                       - 200: Successfully ICR'd
+                      - 250: Partial ICR'd
                       - 300: Duplicate Document Uploaded
                       - 400: Document Corrupted, Unable to open, or Editable pdf
+                      - 406: Illegible
+                      - 415: Out of scope document
                       - 500: Ineligible Document
                     enum:
                     - 200
+                    - 250
                     - 300
                     - 400
+                    - 406
+                    - 415
                     - 500
                   message:
                     type: string
