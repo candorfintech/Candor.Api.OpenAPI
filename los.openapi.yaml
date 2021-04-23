@@ -86,7 +86,7 @@ paths:
               schema:
                 $ref: 'schemas.yaml#/components/schemas/CandorResult'
               example:
-                id: c8e27489-0381-438f-8148-4b7a2379a64c
+                loanId: c8e27489-0381-438f-8148-4b7a2379a64c
                 runId: 1
                 timestamp: '0001-01-01T00:00:00Z'
                 context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
@@ -100,7 +100,7 @@ paths:
                 assets: Pending
                 income: Pending
                 conditions:
-                - id: 151ce1d9-90e2-4e32-9337-8de6d8124e50
+                - conditionId: 151ce1d9-90e2-4e32-9337-8de6d8124e50
                   status: Unfulfilled
                   name: Condition Name
                   description: Extended descriptive text for this condition

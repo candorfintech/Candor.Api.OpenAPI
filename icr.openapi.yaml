@@ -374,7 +374,7 @@ components:
                     type: integer
                     description: |
                       - 200: Successfully ICR'd
-                      - 250: Partial ICR'd
+                      - 250: Partially ICR'd
                       - 300: Duplicate Document Uploaded
                       - 400: Document Corrupted, Unable to open, or Editable pdf
                       - 406: Illegible

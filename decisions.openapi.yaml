@@ -38,9 +38,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CandorResultSync'
+                $ref: '#/components/schemas/CandorResultsSync'
               example:
-                id: c8e27489-0381-438f-8148-4b7a2379a64c
+                loanId: c8e27489-0381-438f-8148-4b7a2379a64c
                 candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
                 runId: 1
                 timestamp: '0001-01-01T00:00:00Z'
@@ -56,8 +56,8 @@ paths:
                 assets: Pending
                 income: Pending
                 conditions:
-                - id: 151ce1d9-90e2-4e32-9337-8de6d8124e50
-                  status: 0
+                - conditionId: 151ce1d990e24e32
+                  status: 'Unfulfilled'
                   name: Condition Name
                   description: Extended descriptive text for this condition
                   priorTo: PTD
@@ -72,7 +72,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CandorResultAsync'
+                type: object
+                title: Asynchronous Candor Result
+                properties:
+                  candorId:
+                    $ref: '#/components/schemas/CandorId'
               example:
                 candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
         default:
@@ -121,7 +125,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CandorResultCallback'
+              $ref: '#/components/schemas/CandorResultsAsync'
       responses:
         '200':
           description: Ok
@@ -164,13 +168,13 @@ components:
       allOf:
         - $ref: 'schemas.yaml#/components/schemas/ProcessLoanBase'
       required:
-      - id
+      - loanId
       - customerId
       - sessionid
       - outputtype
       - loanData
       properties:
-        id:
+        loanId:
           $ref: 'schemas.yaml#/components/schemas/LoanId'
         customerId:
           $ref: '#/components/schemas/CustomerId'
@@ -198,7 +202,7 @@ components:
     ProcessDocuments:
       type: object
       required:
-      - id
+      - loanId
       - context
       - candorId
       - sessionid
@@ -206,7 +210,7 @@ components:
       - inputDocuments
       - outputDocuments
       properties:
-        id:
+        loanId:
           $ref: 'schemas.yaml#/components/schemas/LoanId'
         context:
           $ref: 'schemas.yaml#/components/schemas/Context'
@@ -227,6 +231,9 @@ components:
             required:
             - status
             properties:
+              filename:
+                type: string
+                description: The LOS filename of this Document.
               status:
                 type: object
                 description: |
@@ -264,30 +271,14 @@ components:
                 default: false
                 description: If this is true, then the file that was previously uploaded should be marked as deleted and not used for further processing.
 
-    CandorResultSync:
+    CandorResultsSync:
       type: object
-      title: Synchronous Candor Result
+      title: Candor Results
       allOf:
         - $ref: 'schemas.yaml#/components/schemas/CandorResult'
       properties:
         candorId:
           $ref: '#/components/schemas/CandorId'
-        customerId:
-          $ref:  "#/components/schemas/CustomerId"
-
-    CandorResultAsync:
-      type: object
-      title: Asynchronous Candor Result
-      properties:
-        candorId:
-          $ref: '#/components/schemas/CandorId'
-
-    CandorResultCallback:
-      type: object
-      title: Candor Result
-      allOf:
-        - $ref: 'schemas.yaml#/components/schemas/CandorResult'
-      properties:
         documentsProcessed:
           type: array
           items:
@@ -311,6 +302,7 @@ components:
                       The processed status for this document
 
                       - 200: Successfully ICR'd
+                      - 250: Partially ICR'd
                       - 300: Duplicate Document Uploaded
                       - 400: Document Corrupted, Unable to open, or Editable pdf
                       - 401: Unable to match Borrower name on document to applicant; Lender to review
@@ -319,9 +311,11 @@ components:
                       - 404: Unable to match Company Name on document to application; Lender to review
                       - 405: Document is outdated per guideline requirements
                       - 406: Successfully ICR'd
+                      - 415: Out of scope document
                       - 500: Ineligible Document
                     enum:
                     - 200
+                    - 250
                     - 300
                     - 400
                     - 401
@@ -330,15 +324,26 @@ components:
                     - 404
                     - 405
                     - 406
+                    - 415
                     - 500
                   message:
                     type: string
+
+    CandorResultsAsync:
+      allOf:
+        - $ref: '#/components/schemas/CandorResultsSync'
+      properties:
+        emails:
+          type: array
+          description: A list of emails to notify when a Candor Result is processed that contained new documents uploaded to the loan.
+          items:
+            type: string
 
   examples:
     ProcessLoanReqSync:
       summary: Synchronous Process Loan Request
       value:
-        id: c8e27489-0381-438f-8148-4b7a2379a64c
+        loanId: c8e27489-0381-438f-8148-4b7a2379a64c
         customerId: CustomerName-Production
         sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
         outputtype: Json
@@ -364,7 +369,7 @@ components:
     ProcessLoanReqAsync:
       summary: Asynchronous Process Loan Request
       value:
-        id: c8e27489-0381-438f-8148-4b7a2379a64c
+        loanId: c8e27489-0381-438f-8148-4b7a2379a64c
         customerId: CustomerName-Production
         sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
         outputtype: Json
@@ -390,7 +395,7 @@ components:
     ProcessLoanDocuments:
       summary: Process Loan Documents
       value:
-        id: c8e27489-0381-438f-8148-4b7a2379a64c
+        loanId: c8e27489-0381-438f-8148-4b7a2379a64c
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
         sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
@@ -398,6 +403,7 @@ components:
         inputDocuments:
         - fileId: 056960be-e703-4eeb-8f0a-3ea58063ba34
           bucket: loan-documents
+          filename: HelloWorld.pdf
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/371d3620-1c98-4466-9f95-290b7748594d
           status:
             code: 200
@@ -410,6 +416,7 @@ components:
             message: Duplicate request
         - fileId: 75717e24-8102-4140-9c01-5044928cae2e
           bucket: loan-documents
+          filename: FooBar.pdf
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
           status:
             code: 400
@@ -428,7 +435,7 @@ components:
     ProcessLoanDocumentsWithDelete:
       summary: Process Loan Documents with Deleted Output Documents
       value:
-        id: c8e27489-0381-438f-8148-4b7a2379a64c
+        loanId: c8e27489-0381-438f-8148-4b7a2379a64c
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
         sessionid: NS-88be6e65-cdef-4bcc-8298-d6b09b577a33
@@ -436,6 +443,7 @@ components:
         inputDocuments:
         - fileId: 056960be-e703-4eeb-8f0a-3ea58063ba34
           bucket: loan-documents
+          filename: HelloWorld.pdf
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/371d3620-1c98-4466-9f95-290b7748594d
           status:
             code: 200
@@ -448,6 +456,7 @@ components:
             message: Duplicate request
         - fileId: 75717e24-8102-4140-9c01-5044928cae2e
           bucket: loan-documents
+          filename: FooBar.pdf
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/69f15f0d-ec1c-4a54-9798-9a2bd0803adb
           status:
             code: 400

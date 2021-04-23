@@ -21,6 +21,12 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+vNext
+- Add response object to ICR DocumentsAvailable callback
+- Change Decision models of `id` to a named id: `loanId`, `conditionId`
+- Added `filename` back to Decision `inputDocuments`
+- Added new ICR status codes
+
 v0.10.0
 - Change `ezToClose` to `insuranceScore`
 - Decision documents to/from all have id, bucket, path, and no filename
