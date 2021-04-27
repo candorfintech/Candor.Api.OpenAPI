@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.10.0
+  version: 0.11.0
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -156,7 +156,7 @@ components:
         emails:
           type: array
           title: Emails
-          description: A list of emails to notify when a Candor Result is processed that contained new documents uploaded to the loan.
+          description: A list of emails to notify when a Candor Result is processed.
           items:
             type: object
             required:
@@ -188,7 +188,7 @@ components:
       type: object
       title: Candor Result
       properties:
-        id:
+        loanId:
           $ref: '#/components/schemas/LoanId'
         runId:
           type: integer
@@ -246,7 +246,7 @@ components:
           items:
             title: Condition
             properties:
-              id:
+              conditionId:
                 type: string
                 description: Unique identifier for the condition
               status:
