@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.11.0-rc.1
+  version: 0.11.0-rc.2
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -302,8 +302,10 @@ components:
                       The processed status for this document
 
                       - 200: Successfully ICR'd
-                      - 250: Partially ICR'd
                       - 300: Duplicate Document Uploaded
+                      - 301: Illegible Document
+                      - 302: Ineligible Document
+                      - 350: Partially ICR'd
                       - 400: Document Corrupted, Unable to open, or Editable pdf
                       - 401: Unable to match Borrower name on document to applicant; Lender to review
                       - 402: Unable to match SSN on document to applicant; Lender to review
@@ -311,12 +313,15 @@ components:
                       - 404: Unable to match Company Name on document to application; Lender to review
                       - 405: Document is outdated per guideline requirements
                       - 406: Successfully ICR'd
-                      - 415: Out of scope document
-                      - 500: Ineligible Document
+                      - 500: Failed ICR'd
+                    # Input Document Status Result
+                    # 406 -> 200
                     enum:
                     - 200
-                    - 250
                     - 300
+                    - 301
+                    - 302
+                    - 350
                     - 400
                     - 401
                     - 402
@@ -324,7 +329,6 @@ components:
                     - 404
                     - 405
                     - 406
-                    - 415
                     - 500
                   message:
                     type: string

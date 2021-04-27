@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.11.0-rc.1
+  version: 0.11.0-rc.2
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
@@ -328,6 +328,9 @@ components:
                       - 4003: Unsupported File Format
                       - 4004: Unable to process as document does not exist
                       - 4008: Duplicate Request
+                    # Input Document Status Result
+                    # 4003 -> 302
+                    # 4008 -> 300
                     enum:
                     - 2000
                     - 401
@@ -374,19 +377,19 @@ components:
                     type: integer
                     description: |
                       - 200: Successfully ICR'd
-                      - 250: Partially ICR'd
                       - 300: Duplicate Document Uploaded
+                      - 301: Illegible Document
+                      - 302: Ineligible Document
+                      - 350: Partially ICR'd
                       - 400: Document Corrupted, Unable to open, or Editable pdf
-                      - 406: Illegible
-                      - 415: Out of scope document
-                      - 500: Ineligible Document
+                      - 500: Failed ICR'd
                     enum:
                     - 200
-                    - 250
                     - 300
+                    - 301
+                    - 302
+                    - 350
                     - 400
-                    - 406
-                    - 415
                     - 500
                   message:
                     type: string
