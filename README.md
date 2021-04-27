@@ -21,14 +21,12 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
-### v0.11.0-rc.2
-- Updated Document status codes across all entities
-
-### v0.11.0-rc.1
+### v0.11.0
 - Add response object to ICR DocumentsAvailable callback
 - Change Decision models of `id` to a named id: `loanId`, `conditionId`
 - Added `filename` back to Decision `inputDocuments`
 - Added new ICR status codes
+- Updated Document status codes across all entities
 
 ### v0.10.0
 - Change `ezToClose` to `insuranceScore`
