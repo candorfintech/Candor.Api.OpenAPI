@@ -21,6 +21,10 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.11.1-rc.1
+- Fix invalid example
+- Fixed OpenAPI linting using Spectral
+
 ### v0.11.0
 - Add response object to ICR DocumentsAvailable callback
 - Change Decision models of `id` to a named id: `loanId`, `conditionId`
