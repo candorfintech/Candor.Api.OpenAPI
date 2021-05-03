@@ -1,0 +1,6 @@
+extends: spectral:oas
+rules:
+  info-description: off
+  openapi-tags: off
+  oas3-unused-components-schema: off
+  operation-2xx-response: off

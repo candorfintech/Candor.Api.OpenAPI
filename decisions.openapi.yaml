@@ -1,10 +1,21 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.11.0
+  version: 0.11.1
+  contact:
+    name: Candor Api Specification
+    url: https://github.com/candorfintech/Candor.Api.OpenAPI
 externalDocs:
   description: Changelog
   url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
+servers:
+  - description: Development
+    url: 'https://api-dev.candortechnology.com'
+  - description: Staging
+    url: 'https://api-stage.candortechnology.com'
+  - description: Production
+    url: 'https://api.candortechnology.com'
+    
 tags:
 - name: Decisions
   description: Candor Api calls into Decisions
@@ -229,6 +240,7 @@ components:
             allOf:
               - $ref: '#/components/schemas/CandorDocument'
             required:
+            - filename
             - status
             properties:
               filename:
@@ -414,6 +426,7 @@ components:
             message: Successfully ICR'd
         - fileId: 5b445ebd-e16c-4613-9b7b-41e57334b073
           bucket: loan-documents
+          filename: Document
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/9982324b-577e-4061-94f1-c506182cbe82
           status:
             code: 300
@@ -454,6 +467,7 @@ components:
             message: Successfully ICR'd
         - fileId: 5b445ebd-e16c-4613-9b7b-41e57334b073
           bucket: loan-documents
+          filename: Document
           path: 029d4378-e479-4c53-a671-b3e89d829911/c8e27489-0381-438f-8148-4b7a2379a64c/input/9982324b-577e-4061-94f1-c506182cbe82
           status:
             code: 300
@@ -485,6 +499,6 @@ components:
       description: This will not work in SwaggerUI until CORS is enabled on Cognito
       flows:
         clientCredentials:
-          tokenUrl: https://candor-api-dev.auth.us-east-2.amazoncognito.com/oauth2/token
+          tokenUrl: /token
           scopes:
             candorApi/candorApi/full:candor: Write access to LOS data
