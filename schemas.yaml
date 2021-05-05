@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.11.1
+  version: 0.12.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -182,13 +182,21 @@ components:
                 - Processor
                 - Underwriter
                 - LoanOfficer
-        investor:
-          type: object
-          properties:
-            name:
-              type: string
-            productName:
-              type: string
+        investors:
+          type: array
+          title: Investors
+          description: A list of investors for this loan
+          minItems: 1
+          items:
+            type: object
+            required:
+              - name
+              - productName
+            properties:
+              name:
+                type: string
+              productName:
+                type: string
         gse:
           type: string
           enum:

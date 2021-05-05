@@ -21,6 +21,10 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.12.0
+- Change `investor` to an array and rename to `investors`
+- Update Swagger UI to v3.48.0
+
 ### v0.11.1
 - Fix invalid example
 - Fixed OpenAPI linting using Spectral
