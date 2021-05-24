@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Common definitions for Candor Api
-  version: 0.12.0
+  version: 0.13.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI

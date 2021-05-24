@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api LOS Communication
-  version: 0.12.0
+  version: 0.13.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -23,6 +23,113 @@ servers:
     url: 'https://api.candortechnology.com'
 
 paths:
+  /loan/subscribe:
+    post:
+      tags:
+      - LOS
+      summary: Register Callback (not currently implemented)
+      description: |
+        Subscribe an LOS callback Url to receive notifications when Candor results are available.
+
+        **Note:** this is currently not implemented and only provided here for documentation of the object models.
+      operationId: LosSubscribe
+      security:
+      - candor-api:
+        - candorApi/write:los
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: Callback Registration
+              type: object
+              required:
+              - callbackUrl
+              properties:
+                callbackUrl:
+                  type: string
+                  format: uri
+                  description: The callback url
+                auth:
+                  type: object
+                  title: Authentication
+                  description: If authentication is required for the `callbackUrl`, this object represents the type of authentication to use as well as any needed parameters. Additional supported authentication types could be added as needed.
+                  oneOf:
+                  - type: object
+                    title: Header Authentication
+                    description: Static headers added to the callback request
+                    required:
+                    - type
+                    - headers
+                    properties:
+                      type:
+                        type: string
+                        description: Constant value of `header`
+                        default: header
+                        enum:
+                        - header
+                      headers:
+                        type: object
+                        description: A collection of keys and values that'll be added to the headers of the callback request.
+                        additionalProperties:
+                          type: string
+            examples:
+              CallbackRegNoAuth:
+                summary: Callback registration without Auth
+                value:
+                  callbackUrl: https://api.los.com/callback
+              CallbackRegWithCustomHeaders:
+                summary: Callback registration with Custom Header(s) Auth
+                value:
+                  callbackUrl: https://api.los.com/callback
+                  auth:
+                    type: header
+                    headers:
+                      x-api-key: abc-123
+              CallbackRegWithApiKey:
+                summary: Callback registration with Bearer Api Key
+                value:
+                  callbackUrl: https://api.los.com/callback
+                  auth:
+                    type: header
+                    headers:
+                      Authorization: Bearer secret-api-key
+              CallbackRegWithBasic:
+                summary: Callback registration with Basic Auth
+                value:
+                  callbackUrl: https://api.los.com/callback
+                  auth:
+                    type: header
+                    headers:
+                      Authorization: Basic aGVsbG86d29ybGQ=
+      callbacks:
+        CandorResult:
+          '{$request.body#/callbackUrl}':
+            post:
+              summary: Candor Result Callback
+              description: Receive notification when a Candor Result has been created.
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/CandorResult'
+                    examples:
+                      CandorResult:
+                        $ref: '#/components/examples/CandorResult'
+              responses:
+                '2XX':
+                  description: Candor Result was received.
+                default:
+                  description: Any non-success response code will be logged and retried a set number of times
+      responses:
+        '201':
+          description: Callback set
+        '400':
+          description: Error in Request Body
+        default:
+          description: Unexpected Error
+
   /loan/{id}/document:
     parameters:
     - $ref: 'schemas.yaml#/components/parameters/LoanId'
@@ -95,32 +202,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CandorResult'
-              example:
-                loanId: c8e27489-0381-438f-8148-4b7a2379a64c
-                runId: 1
-                timestamp: '0001-01-01T00:00:00Z'
-                context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
-                insuranceScore: '75'
-                insuranceCovered: Pending
-                underwritingStatus: Conditional Approval
-                occupancy: Valid
-                identity: Valid
-                valuation: Pending
-                liabilities: Pending
-                assets: Pending
-                income: Pending
-                conditions:
-                - conditionId: 151ce1d9-90e2-4e32-9337-8de6d8124e50
-                  status: Unfulfilled
-                  name: Condition Name
-                  description: Extended descriptive text for this condition
-                  priorTo: PTD
-                  owner: Lender
-                  category: Credit
-                results:
-                - name: Findings.pdf
-                  section: Candor - Findings Page
-                  base64: SGVsbG8gV29ybGQ=
+              examples:
+                CandorResult:
+                  $ref: '#/components/examples/CandorResult'
         '202':
           description: |
             Successful asynchronous response (no body returned).
@@ -182,53 +266,84 @@ components:
       type: object
       allOf:
       - $ref: 'schemas.yaml#/components/schemas/CandorResult'
-      properties:
-        documentsProcessed:
-          type: array
-          items:
-            type: object
-            title: Processed Document
-            properties:
-              id:
-                type: string
-                description: The original LOS File Id supplied to the Candor Api for this document
-              status:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: |
-                      The processed status for this document
+      # Commented out until we can merge all the statuses into a single status.
+      # properties:
+      #   documentsProcessed:
+      #     type: array
+      #     items:
+      #       type: object
+      #       title: Processed Document
+      #       properties:
+      #         id:
+      #           type: string
+      #           description: The original LOS File Id supplied to the Candor Api for this document
+      #         status:
+      #           type: object
+      #           properties:
+      #             code:
+      #               type: integer
+      #               description: |
+      #                 The processed status for this document
 
-                      - 200: Successfully ICR'd
-                      - 300: Duplicate Document Uploaded
-                      - 301: Illegible Document
-                      - 302: Ineligible Document
-                      - 350: Partially ICR'd
-                      - 400: Document Corrupted, Unable to open, or Editable pdf
-                      - 401: Unable to match Borrower name on document to applicant; Lender to review
-                      - 402: Unable to match SSN on document to applicant; Lender to review
-                      - 403: Unable to match Employer on document to application; Lender to review
-                      - 404: Unable to match Company Name on document to application; Lender to review
-                      - 405: Document is outdated per guideline requirements
-                      - 500: Failed ICR'd
-                    enum:
-                    - 200
-                    - 300
-                    - 301
-                    - 302
-                    - 350
-                    - 400
-                    - 401
-                    - 402
-                    - 403
-                    - 404
-                    - 405
-                    - 500
-                  message:
-                    type: string
+      #                 - 200: Successfully ICR'd
+      #                 - 300: Duplicate Document Uploaded
+      #                 - 301: Illegible Document
+      #                 - 302: Ineligible Document
+      #                 - 350: Partially ICR'd
+      #                 - 400: Document Corrupted, Unable to open, or Editable pdf
+      #                 - 401: Unable to match Borrower name on document to applicant; Lender to review
+      #                 - 402: Unable to match SSN on document to applicant; Lender to review
+      #                 - 403: Unable to match Employer on document to application; Lender to review
+      #                 - 404: Unable to match Company Name on document to application; Lender to review
+      #                 - 405: Document is outdated per guideline requirements
+      #                 - 500: Failed ICR'd
+      #               enum:
+      #               - 200
+      #               - 300
+      #               - 301
+      #               - 302
+      #               - 350
+      #               - 400
+      #               - 401
+      #               - 402
+      #               - 403
+      #               - 404
+      #               - 405
+      #               - 500
+      #             message:
+      #               type: string
 
   examples:
+    CandorResult:
+      summary: Candor Result
+      value:
+        loanId: c8e27489-0381-438f-8148-4b7a2379a64c
+        runId: 1
+        timestamp: '0001-01-01T00:00:00Z'
+        context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        insuranceScore: '75'
+        insuranceCovered: Pending
+        underwritingStatus: Conditional Approval
+        occupancy: Valid
+        identity: Valid
+        valuation: Pending
+        liabilities: Pending
+        assets: Pending
+        income: Pending
+        conditions:
+        - conditionId: 151ce1d9-90e2-4e32-9337-8de6d8124e50
+          status: Unfulfilled
+          name: Condition Name
+          description: Extended descriptive text for this condition
+          priorTo: PTD
+          owner: Lender
+          category: Credit
+        results:
+        - name: Findings.pdf
+          section: Candor - Findings Page
+          base64: SGVsbG8gV29ybGQ=
+        # documentsProcessed: []
+
     UploadDocumentRequest:
       summary: Request to upload multiple documents with varying input.
       value:

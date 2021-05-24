@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api ICR Communication
-  version: 0.12.0
+  version: 0.13.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -27,8 +27,11 @@ paths:
     post:
       tags:
       - ICR
-      summary: Register Callback
-      description: Subscribe an ICR callback url to receive notifications when documents are ready to be processed
+      summary: Register Callback (not currently implemented)
+      description: |
+        Subscribe an ICR callback Url to receive notifications when documents are ready to be processed.
+
+        **Note:** this is currently not implemented and only provided here for documentation of the object models.
       operationId: IcrSubscribe
       security:
       - candor-api:
@@ -115,14 +118,14 @@ paths:
                     schema:
                       $ref: '#/components/schemas/Callback'
               responses:
-                '200':
+                '2XX':
                   description: Request was received and individual document status will be reported in the response body.
                   content:
                     application/json:
                       schema:
                         $ref: '#/components/schemas/DocumentsReceived'
                 default:
-                  description: Any non-success response code will be logged.
+                  description: Any non-success response code will be logged and retried a set number of times
       responses:
         '201':
           description: Callback set
