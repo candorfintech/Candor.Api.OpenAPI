@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.13.0
+  version: 0.13.1
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -233,6 +233,7 @@ components:
           $ref:  "#/components/schemas/OutputType"
         inputDocuments:
           type: array
+          title: Input Documents
           description: A list of LOS input documents and its processed status
           minItems: 1
           items:
@@ -248,6 +249,7 @@ components:
                 description: The LOS filename of this Document.
               status:
                 type: object
+                title: Status
                 description: |
                   The processed status for this LOS input document.
 
@@ -271,6 +273,7 @@ components:
                     description: Descriptive text of the status
         outputDocuments:
           type: array
+          title: Output Documents
           description: A list of ICR output documents
           minItems: 1
           items:
@@ -293,15 +296,18 @@ components:
           $ref: '#/components/schemas/CandorId'
         documentsProcessed:
           type: array
+          title: Documents Processed
           items:
             type: object
             title: Processed Document
-            allOf:
-              - $ref: '#/components/schemas/CandorDocument'
             required:
+            - fileId
             - parentFileId
             - status
             properties:
+              fileId:
+                type: string
+                description: The Candor Api unique identifier for this document
               parentFileId:
                 type: string
                 description: The unique identifier of the source document (original inputDocument).
@@ -351,6 +357,7 @@ components:
       properties:
         emails:
           type: array
+          title: Emails
           description: A list of emails to notify when a Candor Result is processed that contained new documents uploaded to the loan.
           items:
             type: string

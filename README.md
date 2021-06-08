@@ -21,6 +21,11 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.13.1
+- Removed Bucket and Path from Decisions Result.
+- Added additional titles for better seperation in schema docs.
+- Update Swagger UI to v3.50.0
+
 ### v0.13.0
 - Added LOS Callback for Candor Result.
 - Update Swagger UI to v3.49.0
