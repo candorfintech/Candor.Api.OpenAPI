@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api LOS Communication
-  version: 0.13.1
+  version: 0.14.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -263,7 +263,6 @@ components:
             type: string
 
     CandorResult:
-      type: object
       allOf:
       - $ref: 'schemas.yaml#/components/schemas/CandorResult'
       # Commented out until we can merge all the statuses into a single status.
@@ -324,12 +323,12 @@ components:
         insuranceScore: '75'
         insuranceCovered: Pending
         underwritingStatus: Conditional Approval
-        occupancy: Valid
-        identity: Valid
-        valuation: Pending
-        liabilities: Pending
-        assets: Pending
-        income: Pending
+        occupancy: 10
+        identity: 20
+        valuation: 30
+        liabilities: 40
+        assets: 50
+        income: null
         conditions:
         - conditionId: 151ce1d9-90e2-4e32-9337-8de6d8124e50
           status: Unfulfilled

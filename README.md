@@ -21,6 +21,10 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.14.0
+- Update Candor Result scores to be numbers instead of an enum.
+- Update Swagger UI to v3.51.0
+
 ### v0.13.1
 - Removed Bucket and Path from Decisions Result.
 - Added additional titles for better seperation in schema docs.

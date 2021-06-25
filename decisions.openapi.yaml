@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.13.1
+  version: 0.14.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -60,12 +60,12 @@ paths:
                 insuranceScore: '75'
                 insuranceCovered: Pending
                 underwritingStatus: Conditional Approval
-                occupancy: Valid
-                identity: Valid
-                valuation: Pending
-                liabilities: Pending
-                assets: Pending
-                income: Pending
+                occupancy: 10
+                identity: 20
+                valuation: 30
+                liabilities: 40
+                assets: null
+                income: 50
                 conditions:
                 - conditionId: 151ce1d990e24e32
                   status: 'Unfulfilled'
