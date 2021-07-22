@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.14.0
+  version: 0.15.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -32,7 +32,7 @@ paths:
       - Decisions
       operationId: DecisionsProcessLoan
       summary: Process Loan Data
-      description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `Synchronous`). If the `request.responseType` is `Asynchronous`, then the loan data will be ingested and just the `candorId` will be returned.
+      description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `Synchronous` and `request.hasDocuments` = `false`). If the `request.responseType` is `Asynchronous` or `request.hasDocuments` is `true`, then the loan data will be ingested and just the `loanName` and `candorId` will be returned.
       requestBody:
         content:
           application/json:
@@ -52,6 +52,7 @@ paths:
                 $ref: '#/components/schemas/CandorResultsSync'
               example:
                 loanId: c8e27489-0381-438f-8148-4b7a2379a64c
+                loanName: abc123
                 candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
                 runId: 1
                 timestamp: '0001-01-01T00:00:00Z'
@@ -86,9 +87,12 @@ paths:
                 type: object
                 title: Asynchronous Candor Result
                 properties:
+                  loanName:
+                    $ref: 'schemas.yaml#/components/schemas/LoanName'
                   candorId:
                     $ref: '#/components/schemas/CandorId'
               example:
+                loanName: abc123
                 candorId: 68098e32-ce8f-41a9-9ce7-7127514348f2
         default:
           description: Unexpected Error
@@ -145,16 +149,16 @@ components:
   schemas:
     CandorId:
       type: string
-      description: The Decisions unique identifier for this loan application.
+      description: The Candor unique identifier for this loan application.
     CustomerId:
       type: string
       description: "Candor's internal Id for this customer"
     SessionId:
       type: string
-      description: "Decisions' internal Auth Id for this customer"
+      description: "Candor' internal Auth Id for this customer"
     OutputType:
       type: string
-      description: The response type from Decisions. This will always be "Json"
+      description: The response type from Candor. This will always be "Json"
       enum:
         - Json
     CandorDocument:
@@ -193,6 +197,10 @@ components:
           $ref:  "#/components/schemas/SessionId"
         outputtype:
           $ref: '#/components/schemas/OutputType'
+        hasDocuments:
+          type: boolean
+          description: The presence of Documents will control the response type irregardless of the `responseType`. If `hasDocuments` is `true` then Candor will always return an Asynchronous response (202) and Findings won't be ran until after documents have processed. Otherwise, the response will be based on the value of `responseType`.
+          default: false
         loanData:
           type: array
           description: The various loan data associated with the loan. There must exist at least the URLA data.
@@ -372,6 +380,7 @@ components:
         outputtype: Json
         responseType: Synchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        hasDocuments: false
         emails:
           - email: processor@domain.com
             type: Processor
@@ -398,6 +407,7 @@ components:
         outputtype: Json
         responseType: Asynchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        hasDocuments: true
         emails:
           - email: processor@domain.com
             type: Processor

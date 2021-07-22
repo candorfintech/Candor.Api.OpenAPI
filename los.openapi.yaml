@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api LOS Communication
-  version: 0.14.0
+  version: 0.15.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -317,6 +317,7 @@ components:
       summary: Candor Result
       value:
         loanId: c8e27489-0381-438f-8148-4b7a2379a64c
+        loanName: abc123
         runId: 1
         timestamp: '0001-01-01T00:00:00Z'
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
