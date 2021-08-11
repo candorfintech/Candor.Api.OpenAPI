@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Common definitions for Candor Api
-  version: 0.15.0
+  version: 0.15.1
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -234,7 +234,7 @@ components:
           enum:
           - Pending
           - Available
-          - Not Available
+          - Unavailable
         underwritingStatus:
           type: string
           description: Overall underwriting status on the loan document. Note that `Candor Cleared` means that all "Candor" related conditions have been cleared on a loan document. There may be "Lender" related conditions for items such as a Credit Inquiry Letter, Title, Mortgage Statement still needed; however, Candor has completed it's analysis of the document.

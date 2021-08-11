@@ -21,6 +21,10 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.15.1
+- Rename `insuranceCovered` enum value of `Not Available` to `Unavailable`
+- Update Swagger UI to v3.52.0
+
 ### v0.15.0
 - Added `loanName` to Decisions Process Loan Data response, Decisions Results callback request object, and ICR DocumentsAvailable callback request object.
 - Added `hasDocuments` to Decisions Process Loan Data request.
