@@ -21,6 +21,11 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.16.0
+- Add `loanEmails` to Process Loan request
+- Deprecate `emails` on Process Loan request
+- Update Swagger UI to v3.52.3
+
 ### v0.15.1
 - Rename `insuranceCovered` enum value of `Not Available` to `Unavailable`
 - Update Swagger UI to v3.52.0
