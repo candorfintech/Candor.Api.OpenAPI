@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Common definitions for Candor Api
-  version: 0.15.1
+  version: 0.16.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -173,7 +173,11 @@ components:
         emails:
           type: array
           title: Emails
-          description: A list of emails to notify when a Candor Result is processed.
+          description: |
+            Deprecated: see `loanEmails`.
+
+            A list of emails to notify when a Candor Result is processed.
+          deprecated: true
           items:
             type: object
             required:
@@ -188,6 +192,15 @@ components:
                 - Processor
                 - Underwriter
                 - LoanOfficer
+        loanEmails:
+          type: array
+          title: Notification Emails
+          description: |
+            **Supersedes `emails` property**
+            
+            A list of email addresses that will receive an email notification message when results have been processed.
+          items:
+            type: string
         investors:
           type: array
           title: Investors

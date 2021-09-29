@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Candor Api Decisions Communication
-  version: 0.15.1
+  version: 0.16.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -381,11 +381,9 @@ components:
         responseType: Synchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         hasDocuments: false
-        emails:
-          - email: processor@domain.com
-            type: Processor
-          - email: underwriter@domain.com
-            type: Underwriter
+        loanEmails:
+          - processor@domain.com
+          - underwriter@domain.com
         investors:
           - name: Wells Fargo
             productName: 30 Year Fixed Mortgage
@@ -408,11 +406,9 @@ components:
         responseType: Asynchronous
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
         hasDocuments: true
-        emails:
-          - email: processor@domain.com
-            type: Processor
-          - email: underwriter@domain.com
-            type: Underwriter
+        loanEmails:
+          - processor@domain.com
+          - underwriter@domain.com
         investors:
           - name: Wells Fargo
             productName: 30 Year Fixed Mortgage
