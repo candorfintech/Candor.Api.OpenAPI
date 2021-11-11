@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Candor Api Decisions Communication
-  version: 0.16.0
+  title: Candor Api LES Communication
+  version: 0.17.0
   contact:
     name: Candor Api Specification
     url: https://github.com/candorfintech/Candor.Api.OpenAPI
@@ -17,22 +17,22 @@ servers:
     url: 'https://api.candortechnology.com'
     
 tags:
-- name: Decisions
-  description: Candor Api calls into Decisions
+- name: Candor LES
+  description: Candor Api calls into Candor LES
   externalDocs:
     description: SwaggerUI
-    url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Decisions
+    url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Candor%20LES
 - name: Candor Api
-  description: Decisions calls into Candor Api
+  description: Candor LES calls into Candor Api
 
 paths:
   /process-loan-data:
     post:
       tags:
-      - Decisions
-      operationId: DecisionsProcessLoan
+      - Candor LES
+      operationId: CandorLesProcessLoan
       summary: Process Loan Data
-      description: Sends the loan data into Decisions for ingestion and possible immediate processing (if `request.responseType` = `Synchronous` and `request.hasDocuments` = `false`). If the `request.responseType` is `Asynchronous` or `request.hasDocuments` is `true`, then the loan data will be ingested and just the `loanName` and `candorId` will be returned.
+      description: Sends the loan data into Candor LES for ingestion and possible immediate processing (if `request.responseType` = `Synchronous` and `request.hasDocuments` = `false`). If the `request.responseType` is `Asynchronous` or `request.hasDocuments` is `true`, then the loan data will be ingested and just the `loanName` and `candorId` will be returned.
       requestBody:
         content:
           application/json:
@@ -68,7 +68,8 @@ paths:
                 assets: null
                 income: 50
                 conditions:
-                - conditionId: 151ce1d990e24e32
+                - lesId: 4b13424e-3b89-49b5-8ed8-6cc72385f409
+                  conditionId: 151ce1d990e24e32
                   status: 'Unfulfilled'
                   name: Condition Name
                   description: Extended descriptive text for this condition
@@ -100,8 +101,8 @@ paths:
   /process-loan-documents:
     post:
       tags:
-      - Decisions
-      operationId: DecisionsProcessDocuments
+      - Candor LES
+      operationId: CandorLesProcessDocuments
       summary: Process Loan Documents
       description: 'This will always be an asynchronous call and will always occur after a call to "Process Loan Data" has already occurred.'
       requestBody:

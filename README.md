@@ -21,6 +21,11 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.17.0
+- Updated Candor LES naming
+- Add `lesId` to Condition model
+- Update Swagger UI to v4.1.0
+
 ### v0.16.0
 - Add `loanEmails` to Process Loan request
 - Deprecate `emails` on Process Loan request
@@ -31,8 +36,8 @@ You can view and run this locally using a local static file server. Some example
 - Update Swagger UI to v3.52.0
 
 ### v0.15.0
-- Added `loanName` to Decisions Process Loan Data response, Decisions Results callback request object, and ICR DocumentsAvailable callback request object.
-- Added `hasDocuments` to Decisions Process Loan Data request.
+- Added `loanName` to Candor LES Process Loan Data response, Candor LES Results callback request object, and ICR DocumentsAvailable callback request object.
+- Added `hasDocuments` to Candor LES Process Loan Data request.
 - Update Swagger UI to v3.51.1
 
 ### v0.14.0
@@ -40,7 +45,7 @@ You can view and run this locally using a local static file server. Some example
 - Update Swagger UI to v3.51.0
 
 ### v0.13.1
-- Removed Bucket and Path from Decisions Result.
+- Removed Bucket and Path from Candor LES Result.
 - Added additional titles for better separation in schema docs.
 - Update Swagger UI to v3.50.0
 
@@ -59,17 +64,17 @@ You can view and run this locally using a local static file server. Some example
 
 ### v0.11.0
 - Add response object to ICR DocumentsAvailable callback
-- Change Decision models of `id` to a named id: `loanId`, `conditionId`
-- Added `filename` back to Decision `inputDocuments`
+- Change Candor LES models of `id` to a named id: `loanId`, `conditionId`
+- Added `filename` back to Candor LES `inputDocuments`
 - Added new ICR status codes
 - Updated Document status codes across all entities
 
 ### v0.10.0
 - Change `ezToClose` to `insuranceScore`
-- Decision documents to/from all have id, bucket, path, and no filename
+- Candor LES documents to/from all have id, bucket, path, and no filename
 - Add `parentId` to `documentsProcessed`
-- Changed casing of Decisions' `sessionid`
-- Added required Decisions' property `outputtype: "Json"`
+- Changed casing of Candor LES' `sessionid`
+- Added required Candor LES property `outputtype: "Json"`
 - Changed input/output/documentsProcessed `id` to `fileId`, and changed `parentId` to `parentFileId`
 
 ### v0.9.1
@@ -80,7 +85,7 @@ You can view and run this locally using a local static file server. Some example
 - Update Swagger UI to v3.46.0
 
 ### v0.8.1
-- Fixed the `$.outputDocuments.path` examples for Decisions' Process Loan Documents
+- Fixed the `$.outputDocuments.path` examples for Candor LES Process Loan Documents
 - Update Swagger UI to v3.45.1
 
 ### v0.8.0
@@ -90,7 +95,7 @@ You can view and run this locally using a local static file server. Some example
 
 ### v0.7.0
 - Allow ability to overwrite previously uploaded document
-- Send filename to Decisions in `inputDocuments` and `outputDocuments`
+- Send filename to Candor LES in `inputDocuments` and `outputDocuments`
 
 ### v0.6.0
 - Added header authentication option to ICR callback registration
