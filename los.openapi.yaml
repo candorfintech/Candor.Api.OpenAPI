@@ -136,7 +136,7 @@ paths:
     post:
       tags:
       - LOS
-      operationId: LosProcessLoan
+      operationId: LosProcessAus
       summary: Process AUS comparison
       description: Submits DU xml and/or LPA xml data to be processed by Candor.
       security:
@@ -390,7 +390,7 @@ components:
         duxml: <xml>...</xml>
 
     AusComparisonBoth:
-      summary: Process AUS comparison request with only DU xml
+      summary: Process AUS comparison request with DU and LPA xml
       value:
         duxml: <xml>...</xml>
         lpaxml: <xml>...</xml>
