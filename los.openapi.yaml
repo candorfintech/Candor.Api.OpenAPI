@@ -130,6 +130,45 @@ paths:
         default:
           description: Unexpected Error
 
+  /loan/{id}/aus:
+    parameters:
+    - $ref: 'schemas.yaml#/components/parameters/LoanId'
+    post:
+      tags:
+      - LOS
+      operationId: LosProcessLoan
+      summary: Process AUS comparison
+      description: Submits DU xml and/or LPA xml data to be processed by Candor.
+      security:
+      - candor-api:
+        - candorApi/write:los
+      requestBody:
+        required: true
+        description: Process AUS comparison request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AusComparison'
+            examples:
+              AusComparisonDUOnly:
+                $ref: '#/components/examples/AusComparisonDUOnly'
+              AusComparisonBoth:
+                $ref: '#/components/examples/AusComparisonBoth'
+      responses:
+        '200':
+          description: Successful response including AUS comparison results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AusResult'
+              examples:
+                AusResult:
+                  $ref: '#/components/examples/AusResult'
+        '400':
+          description: An error exists in the request body
+        '500':
+          description: An error exists in the request body
+
   /loan/{id}/document:
     parameters:
     - $ref: 'schemas.yaml#/components/parameters/LoanId'
@@ -217,6 +256,38 @@ paths:
 
 components:
   schemas:
+    AusComparison:
+      type: object
+      properties:
+        duxml:
+          type: string
+          description: The content of the DU xml
+        lpaxml:
+          type: string
+          description: The content of the LPA xml
+
+    AusResult:
+      type: object
+      properties:
+        duPiw:
+          type: boolean
+          description: The DU appraisal waiver.
+        duIncome:
+          type: boolean
+          description: The DU income relief.
+        duAssets:
+          type: boolean
+          description: The DU asset relief.
+        lpaAce:
+          type: boolean
+          description: The LPA appraisal waiver.
+        lpaIncome:
+          type: boolean
+          description: The LPA income relief.
+        lpaAssets:
+          type: boolean
+          description: The LPA asset relief.
+
     ProcessLoan:
       type: object
       required:
@@ -313,6 +384,27 @@ components:
       #               type: string
 
   examples:
+    AusComparisonDUOnly:
+      summary: Process AUS comparison request with only DU xml
+      value:
+        duxml: <xml>...</xml>
+
+    AusComparisonBoth:
+      summary: Process AUS comparison request with only DU xml
+      value:
+        duxml: <xml>...</xml>
+        lpaxml: <xml>...</xml>
+
+    AusResult:
+      summary: AUS Comparison Result
+      value:
+        duPiw: true
+        duIncome: true
+        duAssets: true
+        lpaAce: false
+        lpaIncome: false
+        lpaAssets: false
+
     CandorResult:
       summary: Candor Result
       value:
