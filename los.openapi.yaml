@@ -145,7 +145,7 @@ paths:
 
         D1C = Day 1 Certainty aka on day 1, you can be certain of these items
 
-        AIM = Asset and Income Modeler (LPA''s version of D1C)
+        AIM = Asset and Income Modeler (LPA's version of D1C)
       security:
       - candor-api:
         - candorApi/write:los
