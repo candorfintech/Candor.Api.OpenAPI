@@ -138,7 +138,7 @@ paths:
       - LOS
       operationId: LosProcessAus
       summary: Process AUS comparison
-      description: Submits DU xml and/or LPA xml data to be processed by Candor.
+      description: Submits DU xml and/or LPA xml data to be processed by Candor. The AUS comparison returns the status of Appraisal Waiver, Income Relief, and Asset Relief provided by the DU and/or LPA.
       security:
       - candor-api:
         - candorApi/write:los
@@ -167,7 +167,7 @@ paths:
         '400':
           description: An error exists in the request body
         '500':
-          description: An error exists in the request body
+          description: An error message is returned in the response body
 
   /loan/{id}/document:
     parameters:
