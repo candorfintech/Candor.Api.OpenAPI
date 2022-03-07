@@ -138,7 +138,13 @@ paths:
       - LOS
       operationId: LosProcessAus
       summary: Process AUS comparison
-      description: Submits DU xml and/or LPA xml data to be processed by Candor. The AUS comparison returns the status of Appraisal Waiver, Income Relief, and Asset Relief provided by the DU and/or LPA.
+      description: |
+        AUS Comparison takes in the most recent DU and LPA XMLs and picks up any D1C (DU) and AIM (LPA) message codes.
+        D1C/AIM items provide rep and warranty around income/assets that provides a lift for the lender.
+        The lift is that the lender does not need to review these items, the agency has already validated them.
+
+        D1C = Day 1 Certainty aka on day 1, you can be certain of these items
+        AIM = Asset and Income Modeler (LPA’s version of D1C)
       security:
       - candor-api:
         - candorApi/write:los
