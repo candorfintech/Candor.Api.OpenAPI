@@ -479,6 +479,7 @@ components:
       summary: Process loan request without documents
       value:
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        loanName: abc123
         loanEmails:
         - processor@domain.com
         - underwriter@domain.com
@@ -505,6 +506,7 @@ components:
       summary: Process loan request with documents
       value:
         context: 6cea2800-eb9e-4cd5-8136-4dd11dadf388
+        loanName: abc123
         loanEmails:
         - processor@domain.com
         - underwriter@domain.com
