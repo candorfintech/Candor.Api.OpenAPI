@@ -15,7 +15,7 @@ servers:
     url: 'https://api-stage.candortechnology.com'
   - description: Production
     url: 'https://api.candortechnology.com'
-    
+
 tags:
 - name: Candor LES
   description: Candor Api calls into Candor LES
@@ -80,6 +80,51 @@ paths:
                 - name: Findings.pdf
                   section: Candor - Findings Page
                   base64: SGVsbG8gV29ybGQ=
+                processedDocuments:
+                - parentDocumentId: 3a3b0e08-8b27-4f21-a395-a9b4f3d4548c
+                  processedDocumentId: ef7db80f-05ee-4757-9ab0-ded649d3becc
+                  processedCode: 200
+                  processedMessage: Success
+                - parentDocumentId: 7d3ad95c-8479-4359-888b-19ca4456fa12
+                  processedDocumentId: 8058748d-4425-49c6-8472-628b00cf9d04
+                  processedCode: 301
+                  processedMessage: Illegible Document
+                - parentDocumentId: edb994ca-3a83-4ee0-a35e-b855fbcced45
+                  processedDocumentId: 56dbc58b-b8a5-46ce-8874-9402764f9056
+                  processedCode: 350
+                  processedMessage: Pages 1,6,13,14 ineligible
+                liv:
+                  income:
+                  - documentType: W2
+                    documentData:
+                    - key: YearFiled
+                      value: 2020
+                    - key: EmployerName
+                      value: Demo Company, INC
+                    - key: Wages1
+                      value: 75000.00
+                    - key: SSIWages3
+                      value: 76000.00
+                    - key: SSITax4
+                      value: 1000.00
+                    - key: MedicareWages5
+                      value: 77000.00
+                    - key: MedicareTax6
+                      value: 2000.00
+                  - documentType: Paystub
+                    documentData:
+                    - key: PayDate
+                      value: 8/8/2022
+                    - key: EmployerName
+                      value: Demo Company, INC
+                    - key: PayPeriodBegin
+                      value: 6/1/2022
+                    - key: PayPeriodEnd
+                      value: 8/1/2022
+                    - key: BaseYTD
+                      value: 20000.00
+                    - key: NetAmountPaid
+                      value: 1000.00
         '202':
           description: Successful asynchronous response
           content:
@@ -303,62 +348,6 @@ components:
       properties:
         candorId:
           $ref: '#/components/schemas/CandorId'
-        documentsProcessed:
-          type: array
-          title: Documents Processed
-          items:
-            type: object
-            title: Processed Document
-            required:
-            - fileId
-            - parentFileId
-            - status
-            properties:
-              fileId:
-                type: string
-                description: The Candor Api unique identifier for this document
-              parentFileId:
-                type: string
-                description: The unique identifier of the source document (original inputDocument).
-              status:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    description: |
-                      The processed status for this document
-
-                      - 200: Successfully ICR'd
-                      - 300: Duplicate Document Uploaded
-                      - 301: Illegible Document
-                      - 302: Ineligible Document
-                      - 350: Partially ICR'd
-                      - 400: Document Corrupted, Unable to open, or Editable pdf
-                      - 401: Unable to match Borrower name on document to applicant; Lender to review
-                      - 402: Unable to match SSN on document to applicant; Lender to review
-                      - 403: Unable to match Employer on document to application; Lender to review
-                      - 404: Unable to match Company Name on document to application; Lender to review
-                      - 405: Document is outdated per guideline requirements
-                      - 406: Successfully ICR'd
-                      - 500: Failed ICR'd
-                    # Input Document Status Result
-                    # 406 -> 200
-                    enum:
-                    - 200
-                    - 300
-                    - 301
-                    - 302
-                    - 350
-                    - 400
-                    - 401
-                    - 402
-                    - 403
-                    - 404
-                    - 405
-                    - 406
-                    - 500
-                  message:
-                    type: string
 
     CandorResultsAsync:
       allOf:
