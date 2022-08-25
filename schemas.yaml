@@ -430,11 +430,14 @@ components:
               type: array
               items:
                 properties:
-                  documentType: string
+                  documentType:
+                    type: string
                   documentData:
                     type: array
                     description: A dynamic array of values found in the document. The document type greately affects the values that can be found.
                     items:
                       properties:
-                        key: string
-                        value: string
+                        key:
+                          type: string
+                        value:
+                          type: string
