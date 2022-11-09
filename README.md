@@ -21,6 +21,9 @@ You can view and run this locally using a local static file server. Some example
 
 ## Changelog
 
+### v0.18.0
+- Add `Notification` to Process Loan request
+
 ### v0.17.0
 - Updated Candor LES naming
 - Add `lesId` to Condition model

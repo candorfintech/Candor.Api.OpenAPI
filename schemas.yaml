@@ -348,6 +348,74 @@ components:
                 - Assets
                 - Property
                 - Legal
+        notifications:
+          type: array
+          title: Notifications
+          items:
+            title: Notification
+            properties:
+              lesId:
+                type: string
+                description: Unique identifier for the condition that is
+                  maintained between all runs.
+              conditionId:
+                type: string
+                description: |
+                  Identifier for the condition for this run. Note: The same
+                  condition could be created with different `conditionId` values
+                  between runs. Use `lesId` for a consistent unique identifier
+                  between runs.
+              status:
+                type: string
+                # LoanDepot: Unfulfilled -> 0, Fulfilled -> 1
+                enum:
+                  - Unfulfilled
+                  - Fulfilled
+              name:
+                type: string
+                description: Condition assigned name for condition
+              description:
+                type: string
+                description: Candor provided actual condition verbiage that clearly defines requirements to clear the condition
+              priorTo:
+                type: string
+                description: |
+                  - PTA: Prior to Approval, Suspended, Declined
+                  - PTD: Prior to Documents
+                  - AC: Prior to Closing
+                  - PTF: Prior to Funding
+                  - Notifications
+                # LoanDepot: AC -> PTC
+                enum:
+                - PTA
+                - PTD
+                - AC
+                - PTF
+                - Notifications
+              owner:
+                type: string
+                description: This identifies the responsible party for the condition
+                enum:
+                - Candor
+                - Lender
+              category:
+                type: string
+                description: |
+                  - Credit - Identity
+                  - Credit - Occupancy
+                  - Credit
+                  - Income (i.e., Income/Employment)
+                  - Assets
+                  - Property
+                  - Legal (i.e., Legal/Compliance)
+                enum:
+                - Credit - Identity
+                - Credit - Occupancy
+                - Credit
+                - Income
+                - Assets
+                - Property
+                - Legal
         results:
           type: array
           title: Results
