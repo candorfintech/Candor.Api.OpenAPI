@@ -1,0 +1,108 @@
+x-generator: 'NSwag v13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))'
+openapi: 3.0.0
+info:
+  title: 'Surety API'
+  version: 1.0.0
+paths:
+  /dna/Surety:
+    post:
+      tags:
+        - Surety
+      description: |
+        The Surety API allows you to interact with the Candor Surety model.  
+        Currently, it provides the probability that a loan will fund based on some key pieces of information from the loan.  
+        Soon, it will also provide recommendations about what things would need to change to increase the funding probability of the loan.
+
+      operationId: Surety_PostSurety
+      requestBody:
+        x-name: request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuretyRequest'
+        x-position: 1
+      responses:
+        '200':
+          description: "The response, each item within indicates the probability that the corresponding loan will fund based on the info provided to the system."
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/SuretyResponse'}
+        '401':
+          description: "If you are not authorized/authenticated, you will get a 401 response."
+components:
+  schemas:
+    SuretyResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        Prediction:
+          type: array
+          items:
+            $ref: '#/components/schemas/SuretyPrediction'
+    SuretyPrediction:
+      type: object
+      additionalProperties: false
+      properties:
+        Error:
+          type: string
+          nullable: true
+        Id:
+          type: string
+          nullable: true
+        Probability:
+          type: number
+          format: double
+          nullable: true
+          description: "The probability that the loan will fund."
+    SuretyRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        Loans:
+          type: array
+          items:
+            $ref: '#/components/schemas/SuretyRequestItem'
+    SuretyRequestItem:
+      type: object
+      additionalProperties: false
+      properties:
+        Id:
+          type: string
+          nullable: true
+          description: "An ID to identify the loan"
+        Dti:
+          type: number
+          format: double
+          nullable: true
+        Ltv:
+          type: number
+          format: double
+          nullable: true
+        Fico:
+          type: number
+          format: double
+          nullable: true
+        TotalMonthlyIncome:
+          type: number
+          format: double
+          nullable: true
+        TotalMonthlyIncomeBorAndCoBor:
+          type: number
+          format: double
+          nullable: true
+        OccupancyType:
+          type: string
+          nullable: true
+          description: "\"OwnerOccupied\", for example"
+        FirstTimeHomeBuyer:
+          type: string
+          nullable: true
+          description: "\"Y\" or \"N\""
+        OccupancyStatus:
+          type: string
+          nullable: true
+          description: "\"PrimaryResidence\", for example"
+        LoanType:
+          type: string
+          nullable: true
+          description: "\"Conventional\", for example"

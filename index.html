@@ -39,11 +39,10 @@
     window.onload = function() {
       const ui = SwaggerUIBundle({
         urls: [
-          { name: 'LOS', url: 'los.openapi.yaml' },
-          { name: 'ICR', url: 'icr.openapi.yaml' },
-          { name: 'Candor LES', url: 'candor-les.openapi.yaml' },
+          { name: 'Loan Api', url: 'loanapi_definition.yaml' },
+          { name: 'Surety Model', url: 'dna_api_definition.yaml' },
         ],
-        'urls.primaryName': 'LOS',
+        'urls.primaryName': 'Loan Api',
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [
