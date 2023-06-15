@@ -36,7 +36,7 @@ components:
       title: LoanId
       description: The unique identifier for this loan application.
       minLength: 1
-    
+
     LoanName:
       type: string
       title: LoanName
@@ -197,7 +197,7 @@ components:
           title: Notification Emails
           description: |
             **Supersedes `emails` property**
-            
+
             A list of email addresses that will receive an email notification message when results have been processed.
           items:
             type: string
@@ -363,3 +363,81 @@ components:
               base64:
                 type: string
                 description: The result document binary Base64 encoded.
+        documentsProcessed:
+          type: array
+          title: Documents Processed
+          items:
+            type: object
+            title: Processed Document
+            required:
+            - fileId
+            - parentFileId
+            - status
+            properties:
+              fileId:
+                type: string
+                description: The Candor Api unique identifier for this document
+              parentFileId:
+                type: string
+                description: The unique identifier of the source document (original inputDocument).
+              status:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    description: |
+                      The processed status for this document
+
+                      - 200: Successfully ICR'd
+                      - 300: Duplicate Document Uploaded
+                      - 301: Illegible Document
+                      - 302: Ineligible Document
+                      - 350: Partially ICR'd
+                      - 400: Document Corrupted, Unable to open, or Editable pdf
+                      - 401: Unable to match Borrower name on document to applicant; Lender to review
+                      - 402: Unable to match SSN on document to applicant; Lender to review
+                      - 403: Unable to match Employer on document to application; Lender to review
+                      - 404: Unable to match Company Name on document to application; Lender to review
+                      - 405: Document is outdated per guideline requirements
+                      - 406: Successfully ICR'd
+                      - 500: Failed ICR'd
+                    # Input Document Status Result
+                    # 406 -> 200
+                    enum:
+                    - 200
+                    - 300
+                    - 301
+                    - 302
+                    - 350
+                    - 400
+                    - 401
+                    - 402
+                    - 403
+                    - 404
+                    - 405
+                    - 406
+                    - 500
+                  message:
+                    type: string
+        liv:
+          type: object
+          title: LIV (Loan Income Verification)
+          description: |
+            Soon to be released
+            Breaks down the sources of income that Candor identified.
+          properties:
+            income:
+              type: array
+              items:
+                properties:
+                  documentType:
+                    type: string
+                  documentData:
+                    type: array
+                    description: A dynamic array of values found in the document. The document type greately affects the values that can be found.
+                    items:
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
