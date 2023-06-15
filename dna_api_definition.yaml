@@ -11,7 +11,7 @@ paths:
       description: |
         This endpoint allows you to interact with the Candor Surety model.  
         It provides the probability that a loan will fund based on some key pieces of information from the loan.  
-      operationId: Surety_PredictFundintProbability
+      operationId: Surety_PredictFundingProbability
       requestBody:
         x-name: request
         content:
