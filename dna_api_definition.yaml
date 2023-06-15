@@ -4,22 +4,40 @@ info:
   title: 'Surety API'
   version: 1.0.0
 paths:
-  /dna/Surety:
+  /dna/Surety/PredictFundingProbability:
     post:
       tags:
         - Surety
       description: |
-        The Surety API allows you to interact with the Candor Surety model.  
-        Currently, it provides the probability that a loan will fund based on some key pieces of information from the loan.  
-        Soon, it will also provide recommendations about what things would need to change to increase the funding probability of the loan.
-
-      operationId: Surety_PostSurety
+        This endpoint allows you to interact with the Candor Surety model.  
+        It provides the probability that a loan will fund based on some key pieces of information from the loan.  
+      operationId: Surety_PredictFundintProbability
       requestBody:
         x-name: request
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/SuretyRequest'
+            examples:
+              SuretyRequest:
+                summary: Sample input to the Candor Surety Prediction Api
+                value: |
+                  {
+                      "Loans": [
+                          {
+                              "Id": "your-loanid-here",
+                              "Dti": 41,
+                              "Ltv": 90,
+                              "Fico": 800,
+                              "TotalMonthlyIncome": 8102.08,
+                              "TotalMonthlyIncomeBorAndCoBor": 8102.08,
+                              "OccupancyType": "OwnerOccupied",
+                              "FirstTimeHomeBuyer": "Y",
+                              "OccupancyStatus": "PrimaryResidence",
+                              "LoanType": "Conventional"
+                          }
+                      ]
+                  }
         x-position: 1
       responses:
         '200':
@@ -27,6 +45,20 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/SuretyResponse'}
+              examples:
+                SuretyResponse:
+                  summary: Sample output from the Candor Surety prediction api
+                  value: |
+                    {
+                        "prediction": [
+                            {
+                                "error": null,
+                                "id": "your-loanid-here",
+                                "probability": 0.967741935483871
+                            }
+                        ]
+                    }        
+
         '401':
           description: "If you are not authorized/authenticated, you will get a 401 response."
 components:
