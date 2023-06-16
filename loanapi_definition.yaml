@@ -1,19 +1,19 @@
 openapi: 3.0.3
 info:
-  title: Candor Api LOS Communication
-  version: 0.17.0
+  title: Candor Loan Api
+  version: 1.0
   contact:
     name: Candor Api Specification
-    url: https://github.com/candorfintech/Candor.Api.OpenAPI
+    url: https://github.com/candorfintech/Candor.Api.OpenApi
 externalDocs:
   description: Changelog
-  url: https://github.com/candorfintech/Candor.Api.OpenAPI#changelog
+  url: https://github.com/candorfintech/Candor.Api.OpenApi#changelog
 tags:
-- name: LOS
-  description: LOS communication
+- name: Loan Api
+  description: Endpoints to directly interact with the Candor Loan Engineering System.
   externalDocs:
     description: SwaggerUI
-    url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=LOS
+    url: https://candorfintech.github.io/Candor.Api.OpenAPI/?urls.primaryName=Loan%20Api
 servers:
   - description: Development
     url: 'https://api-dev.candortechnology.com'
