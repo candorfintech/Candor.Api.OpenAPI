@@ -125,7 +125,7 @@ components:
         OccupancyType:
           type: string
           nullable: true
-          description: "\"OwnerOccupied\", for example"
+          description: "Accepted values are: \"OwnerOccupied\", \"NonOwnerOccupied\", null"
         FirstTimeHomeBuyer:
           type: string
           nullable: true
@@ -133,7 +133,7 @@ components:
         OccupancyStatus:
           type: string
           nullable: true
-          description: "\"PrimaryResidence\", for example"
+          description: "Accepted values are: \"PrimaryResidence\", \"SecondHome\", \"Investor\", null"
         LoanType:
           type: string
           nullable: true
